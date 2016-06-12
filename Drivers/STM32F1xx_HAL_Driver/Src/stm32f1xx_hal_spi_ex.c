@@ -5,11 +5,11 @@
   * @version V1.0.3
   * @date    11-January-2016
   * @brief   Extended SPI HAL module driver.
-  *    
-  *          This file provides firmware functions to manage the following 
+  *
+  *          This file provides firmware functions to manage the following
   *          functionalities SPI extension peripheral:
   *           + Extended Peripheral Control functions
-  *  
+  *
   ******************************************************************************
   * @attention
   *
@@ -89,17 +89,15 @@ uint8_t uCRCErrorWorkaroundCheck = 0;
   */
 
 /**
-  * @brief  Initializes the SPI according to the specified parameters 
+  * @brief  Initializes the SPI according to the specified parameters
   *         in the SPI_InitTypeDef and create the associated handle.
   * @param  hspi: pointer to a SPI_HandleTypeDef structure that contains
   *                the configuration information for SPI module.
   * @retval HAL status
   */
-HAL_StatusTypeDef HAL_SPI_Init(SPI_HandleTypeDef *hspi)
-{
+HAL_StatusTypeDef HAL_SPI_Init(SPI_HandleTypeDef *hspi) {
   /* Check the SPI handle allocation */
-  if(hspi == NULL)
-  {
+  if(hspi == NULL) {
     return HAL_ERROR;
   }
 
@@ -117,12 +115,11 @@ HAL_StatusTypeDef HAL_SPI_Init(SPI_HandleTypeDef *hspi)
   assert_param(IS_SPI_CRC_CALCULATION(hspi->Init.CRCCalculation));
   assert_param(IS_SPI_CRC_POLYNOMIAL(hspi->Init.CRCPolynomial));
 
-  if(hspi->State == HAL_SPI_STATE_RESET)
-  {
+  if(hspi->State == HAL_SPI_STATE_RESET) {
     /* Init the low level hardware : GPIO, CLOCK, NVIC... */
     HAL_SPI_MspInit(hspi);
   }
-  
+
   hspi->State = HAL_SPI_STATE_BUSY;
 
   /* Disble the selected SPI peripheral */
@@ -133,7 +130,7 @@ HAL_StatusTypeDef HAL_SPI_Init(SPI_HandleTypeDef *hspi)
   Communication speed, First bit and CRC calculation state */
   WRITE_REG(hspi->Instance->CR1, (hspi->Init.Mode | hspi->Init.Direction | hspi->Init.DataSize |
                                   hspi->Init.CLKPolarity | hspi->Init.CLKPhase | (hspi->Init.NSS & SPI_CR1_SSM) |
-                                  hspi->Init.BaudRatePrescaler | hspi->Init.FirstBit  | hspi->Init.CRCCalculation) );
+                                  hspi->Init.BaudRatePrescaler | hspi->Init.FirstBit  | hspi->Init.CRCCalculation));
 
   /* Configure : NSS management */
   WRITE_REG(hspi->Instance->CR2, (((hspi->Init.NSS >> 16) & SPI_CR2_SSOE) | hspi->Init.TIMode));
@@ -161,7 +158,7 @@ HAL_StatusTypeDef HAL_SPI_Init(SPI_HandleTypeDef *hspi)
 
   hspi->ErrorCode = HAL_SPI_ERROR_NONE;
   hspi->State = HAL_SPI_STATE_READY;
-  
+
   return HAL_OK;
 }
 
@@ -178,24 +175,23 @@ HAL_StatusTypeDef HAL_SPI_Init(SPI_HandleTypeDef *hspi)
   */
 
 /**
-  * @brief  Checks if encountered CRC error could be corresponding to wrongly detected errors 
+  * @brief  Checks if encountered CRC error could be corresponding to wrongly detected errors
   *         according to SPI instance, Device type, and revision ID.
   * @param  hspi: pointer to a SPI_HandleTypeDef structure that contains
   *               the configuration information for SPI module.
-  * @retval CRC error validity (SPI_INVALID_CRC_ERROR or SPI_VALID_CRC_ERROR).  
+  * @retval CRC error validity (SPI_INVALID_CRC_ERROR or SPI_VALID_CRC_ERROR).
 */
-uint8_t SPI_ISCRCErrorValid(SPI_HandleTypeDef *hspi)
-{
+uint8_t SPI_ISCRCErrorValid(SPI_HandleTypeDef *hspi) {
 #if defined (STM32F101xE) || defined (STM32F103xE)
+
   /* Check how to handle this CRC error (workaround to be applied or not) */
   /* If CRC errors could be wrongly detected (issue 2.15.2 in STM32F10xxC/D/E silicon limitations ES (DocID14732 Rev 13) */
-  if ( (uCRCErrorWorkaroundCheck != 0) && (hspi->Instance == SPI2) )
-  {
-    if (hspi->Instance->RXCRCR == 0)
-    {
+  if((uCRCErrorWorkaroundCheck != 0) && (hspi->Instance == SPI2)) {
+    if(hspi->Instance->RXCRCR == 0) {
       return (SPI_INVALID_CRC_ERROR);
     }
   }
+
   return (SPI_VALID_CRC_ERROR);
 #else
   return (SPI_VALID_CRC_ERROR);
