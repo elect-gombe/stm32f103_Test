@@ -1,7 +1,7 @@
 This directory consists middle layers.
 
 example,
-../../Drivers/middleLayers/
+.. / .. / Drivers / middleLayers /
 ├── Inc
 ├── Src
 ├── UART
@@ -13,5 +13,5 @@ example,
 │       └── readme.txt
 └── aboutIt.txt
 
-Inc (sub)directory is include path.
-Sources which is in Src (sub)directory will compaile.
+Inc(sub)directory is include path.
+Sources which is in Src(sub)directory will compaile.
