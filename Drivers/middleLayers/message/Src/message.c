@@ -9,13 +9,13 @@ void _xprintf(char *fmt,...);
 static
 char buff[1024];
 
+
 void MW_printf(const char* fmt,...){
     va_list arp;
     va_start(arp, fmt);
     xvprintf(fmt, arp);
     va_end(arp);
 }
-
 
 void _msg(const char* type,
 	  const char* file,
@@ -38,7 +38,7 @@ void _msg(const char* type,
 void flush(void){
   if(outptr!=0){
     *outptr = 0;		/* Terminate output string with a \0 */
-    printf("%ld\n%s",outptr-buff,buff);
+    printf("%s",buff);		/*print string.*/
   }
   outptr=buff;
 }
