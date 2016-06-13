@@ -1,4 +1,5 @@
 #define STM32F103xE
+
 #include "stm32f1xx.h"
 #include "stm32f1xx_hal.h"
 #include <stdint.h>

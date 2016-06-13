@@ -15,6 +15,7 @@
 
 #if _USE_XFUNC_OUT
 #define xdev_out(func) xfunc_out = (void(*)(unsigned char))(func)
+
 extern char *outptr;
 extern void (*xfunc_out)(unsigned char);
 void xputc (char c);

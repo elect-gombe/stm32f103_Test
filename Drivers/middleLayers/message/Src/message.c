@@ -1,5 +1,6 @@
 #include "xprintf.h"
 #include <stdio.h>
+#include <stdarg.h>
 
 #define message(type,fmt, ...) _msg(type,__FILE__, __FUNCTION__, __LINE__, fmt, ##__VA_ARGS__)
 
