@@ -88,7 +88,8 @@ endif
 all: $(BINDIR)/$(PROJECT).bin $(BINDIR)/$(PROJECT).hex size
 
 clean:
-	rm -f $(PROJECT).bin $(PROJECT).elf $(PROJECT).hex $(PROJECT).map $(PROJECT).lst $(OBJDIR) $(BINDIR) -rf
+	rm $(OBJDIR) $(BINDIR) -rf
+	sleep 1
 
 $(OBJDIR)/$(STARTUP_OBJ): $(STARTUP_SRC)
 	$(CC) $(CPU) -c -x assembler-with-cpp -o $@ $<
