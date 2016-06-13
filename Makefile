@@ -15,6 +15,10 @@
 # Parallel compilation)
 # 
 
+#   text	   data	    bss	    dec	    hex	filename
+#
+#  22572	    236	   1596	  24404	   5f54	./bin/LED_Blink.elf
+
 GCC_BIN = 
 PROJECT = LED_Blink
 
@@ -31,18 +35,18 @@ OBJDIR=./obj
 
 USR_SRCDIR = ./Src
 HAL_SRCDIR = $(HALDIR)/Src
-MIDDLE_SRCDIRS = $(dir $(wildcard $(MIDDLE_DRIVERDIR)/*/Src))Src
+MIDDLE_SRCDIRS = $(wildcard $(MIDDLE_DRIVERDIR)/*/Src)
 STARTUP_SRC = $(DRIVERSDIR)/startup_stm32f103xe.s
 STARTUP_OBJ = startup.o
 
 BINDIR = ./bin
 
-SOURCES   = 	\
+SRCS   = 	\
 		$(wildcard $(USR_SRCDIR)/*.c)	\
 		$(wildcard $(HAL_SRCDIR)/*.c)	\
-		$(wildcard $(MIDDLE_SRCDIRS)/*.c)
+		$(foreach dir,$(wildcard $(MIDDLE_SRCDIRS)),$(wildcard $(dir)/*.c))
 
-SYS_OBJECTS = 	$(addprefix $(OBJDIR)/, $(notdir $(SOURCES:.c=.o)))\
+SYS_OBJECTS = 	$(addprefix $(OBJDIR)/, $(notdir $(SRCS:.c=.o)))\
 		$(OBJDIR)/$(STARTUP_OBJ)
 
 INCLUDEDIRS =   -I $(shell cd ./Inc &&  pwd)							\
@@ -50,7 +54,9 @@ INCLUDEDIRS =   -I $(shell cd ./Inc &&  pwd)							\
 		-I $(shell cd  $(CMSISDIR)/Inc&& pwd)						\
 		-I $(shell cd  $(CMSIS_DEVICEDIR)/Inc&& pwd)					\
 		-I $(shell cd  $(MIDDLE_DRIVERDIR)/Inc && pwd)				\
-		$(addprefix -I, $(shell cd  $(wildcard $(MIDDLE_DRIVERDIR)/*/Inc) && pwd))	
+	$(addprefix -I, \
+		$(foreach dir,$(wildcard $(MIDDLE_DRIVERDIR)/*/Inc),$(shell cd $(dir) && pwd))\
+	)
 
 LINKER_SCRIPT = $(DRIVERSDIR)/STM32F103VETx_FLASH.ld
 
@@ -67,8 +73,9 @@ CC_FLAGS = $(CPU) -c -fno-common -fmessage-length=0 -Wall -Wextra -fno-exception
 
 CC_SYMBOLS = -DTARGET_FF_ARDUINO -DTARGET_NUCLEO_F103RB -DTOOLCHAIN_GCC -DTARGET_FF_MORPHO -DTARGET_LIKE_CORTEX_M3 -DTARGET_CORTEX_M -DTARGET_LIKE_MBED -DTARGET_STM32F1 -D__MBED__=1 -DARM_MATH_CM3 -DMBED_BUILD_TIMESTAMP=1463831794.11 -DTARGET_STM -DTOOLCHAIN_GCC_ARM -D__CORTEX_M3 -DTARGET_M3 -DTARGET_STM32F103RB 
 
-LD_FLAGS = $(CPU) -Wl,--gc-sections --specs=nano.specs -u _printf_float -u _scanf_float -Wl,-Map=$(BINDIR)/$(PROJECT).map,-cref
-LD_SYS_LIBS = -lstdc++ -lsupc++ -lm -lc -lgcc -lnosys
+LD_FLAGS = $(CPU) -Wl,--gc-sections --specs=nano.specs -Wl,-Map=$(BINDIR)/$(PROJECT).map,-cref
+LD_SYS_LIBS = -lgcc
+#-lstdc++ -lsupc++ -lm -lc -lgcc -lnosys
 
 ifeq ($(DEBUG), 1)
   CC_FLAGS += -DDEBUG -Og -g3
@@ -86,15 +93,52 @@ clean:
 $(OBJDIR)/$(STARTUP_OBJ): $(STARTUP_SRC)
 	$(CC) $(CPU) -c -x assembler-with-cpp -o $@ $<
 
+$(OBJDIR)/%.o: $(USR_SRCDIR)/%.c 
+	-mkdir -p $(OBJDIR)
+	$(CC)  $(CC_FLAGS) $(CC_SYMBOLS) -std=gnu99   $(INCLUDEDIRS) -o $@ $<
+
 $(OBJDIR)/%.o: $(HAL_SRCDIR)/%.c
 	-mkdir -p $(OBJDIR)
 	$(CC)  $(CC_FLAGS) $(CC_SYMBOLS) -std=gnu99   $(INCLUDEDIRS) -o $@ $<
 
-$(OBJDIR)/%.o: $(USR_SRCDIR)/%.c
+
+$(OBJDIR)/%.o: $(word 1,$(MIDDLE_SRCDIRS))/%.c
 	-mkdir -p $(OBJDIR)
 	$(CC)  $(CC_FLAGS) $(CC_SYMBOLS) -std=gnu99   $(INCLUDEDIRS) -o $@ $<
 
-$(OBJDIR)/%.o: $(MIDDLE_SRCDIRS)/%.c
+$(OBJDIR)/%.o: $(word 2,$(MIDDLE_SRCDIRS))/%.c
+	-mkdir -p $(OBJDIR)
+	$(CC)  $(CC_FLAGS) $(CC_SYMBOLS) -std=gnu99   $(INCLUDEDIRS) -o $@ $<
+
+$(OBJDIR)/%.o: $(word 3,$(MIDDLE_SRCDIRS))/%.c
+	-mkdir -p $(OBJDIR)
+	$(CC)  $(CC_FLAGS) $(CC_SYMBOLS) -std=gnu99   $(INCLUDEDIRS) -o $@ $<
+
+$(OBJDIR)/%.o: $(word 4,$(MIDDLE_SRCDIRS))/%.c
+	-mkdir -p $(OBJDIR)
+	$(CC)  $(CC_FLAGS) $(CC_SYMBOLS) -std=gnu99   $(INCLUDEDIRS) -o $@ $<
+
+$(OBJDIR)/%.o: $(word 5,$(MIDDLE_SRCDIRS))/%.c
+	-mkdir -p $(OBJDIR)
+	$(CC)  $(CC_FLAGS) $(CC_SYMBOLS) -std=gnu99   $(INCLUDEDIRS) -o $@ $<
+
+$(OBJDIR)/%.o: $(word 6,$(MIDDLE_SRCDIRS))/%.c
+	-mkdir -p $(OBJDIR)
+	$(CC)  $(CC_FLAGS) $(CC_SYMBOLS) -std=gnu99   $(INCLUDEDIRS) -o $@ $<
+
+$(OBJDIR)/%.o: $(word 7,$(MIDDLE_SRCDIRS))/%.c
+	-mkdir -p $(OBJDIR)
+	$(CC)  $(CC_FLAGS) $(CC_SYMBOLS) -std=gnu99   $(INCLUDEDIRS) -o $@ $<
+
+$(OBJDIR)/%.o: $(word 8,$(MIDDLE_SRCDIRS))/%.c
+	-mkdir -p $(OBJDIR)
+	$(CC)  $(CC_FLAGS) $(CC_SYMBOLS) -std=gnu99   $(INCLUDEDIRS) -o $@ $<
+
+$(OBJDIR)/%.o: $(word 9,$(MIDDLE_SRCDIRS))/%.c
+	-mkdir -p $(OBJDIR)
+	$(CC)  $(CC_FLAGS) $(CC_SYMBOLS) -std=gnu99   $(INCLUDEDIRS) -o $@ $<
+
+$(OBJDIR)/%.o: $(word 10,$(MIDDLE_SRCDIRS))/%.c
 	-mkdir -p $(OBJDIR)
 	$(CC)  $(CC_FLAGS) $(CC_SYMBOLS) -std=gnu99   $(INCLUDEDIRS) -o $@ $<
 
@@ -118,6 +162,7 @@ size: $(BINDIR)/$(PROJECT).elf
 	$(SIZE) $(BINDIR)/$(PROJECT).elf
 
 include:
+	echo $(SRCS)
 	echo $(INCLUDEDIRS)
 
 
@@ -130,3 +175,5 @@ openocd: $(BINDIR)/$(PROJECT).elf
 
 DEPS = $(OBJECTS:.o=.d) $(SYS_OBJECTS:.o=.d)
 -include $(DEPS)
+
+export
