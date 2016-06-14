@@ -1,20 +1,20 @@
 /*
-  * A skeleton main.c
-  * Add your own code!
-  */
+ * A skeleton main.c
+ * Add your own code!
+ */
 /* Load CMSIS and peripheral library and configuration */
 
 #include "stm32f1xx_hal.h"
 #include "stm32f1xx.h"
 #include <stdint.h>
 #include <stdio.h>
-#include "xprintf.h"
+#include "message.h"
 
 /* Peripheral configuration functions */
 void GPIO_Config();
 
 /* A simple busy wait loop */
-void Delay( volatile unsigned long delay );
+void Delay(volatile unsigned long delay);
 
 uint32_t SystemCoreClock = 72000000;
 
@@ -31,17 +31,14 @@ UART_HandleTypeDef U2handle = {
   }
 };
 
-void SystemInit( void ) {
+void SystemInit(void) {
   volatile int i[1000] = { 0 };
   i[1000 - 1] = 1 << 16;
   i[2] = i[1];
 
-
-  /* Reset the RCC clock configuration to the default reset state(for debug
-   *purpose) and long comment will make new line */
+  /* Reset the RCC clock configuration to the default reset state*/
 
   /*Set HSEBYP bit */
-
   /*  RCC->CR &= (uint32_t)0x1<<18; */
 
   /* Set HSEON bit */
@@ -64,80 +61,82 @@ void SystemInit( void ) {
 
   /*wait get ready*/
   while( !( RCC->CR & ( 0x01 << 17 ))){
-    ;
   }
 
-  Delay( 10 );
+  Delay(10);
   /*PLL enable*/
   RCC->CR |= 0x01 << 24;
-  Delay( 10 );
-
+  Delay(10);
 
   while( !( RCC->CR & ( 0x01 << 25 ))){
-    ;
   }
 
   RCC->CFGR |= 0x02;
+
   /*select PLL clock*/
-
   RCC->CR &= ~(uint32_t)( 0x01 << 16 );
-  SCB->VTOR = FLASH_BASE;
-}
 
-int __io_putchar( int ch ) {
-  HAL_UART_Transmit( &U2handle, (uint8_t*)&ch, 1, 0xFFFF );
+  /*set interrupt vector base*/
+  SCB->VTOR = FLASH_BASE;
+
+  /*other clock settings*/
+  __HAL_RCC_GPIOD_CLK_ENABLE();
+  __HAL_RCC_USART2_CLK_ENABLE();
+} /* SystemInit */
+
+int __io_putchar(int ch) {
+  HAL_UART_Transmit(&U2handle, (uint8_t*)&ch, 1, 0xFFFF);
   return ch;
 }
 
-int main( void ) {
+int main(void) {
+  int i = 0;
   SystemInit();
   /* Setup the GPIOs */
   GPIO_Config();
 
   HAL_Init();
   {
-    if( HAL_UART_Init( &U2handle ) != HAL_OK ){
+    if( HAL_UART_Init(&U2handle) != HAL_OK ){
       while( 1 ){
-        HAL_GPIO_WritePin( GPIOD, GPIO_PIN_6, GPIO_PIN_SET );
-        HAL_GPIO_WritePin( GPIOD, GPIO_PIN_13, GPIO_PIN_SET );
+        HAL_GPIO_WritePin(GPIOD, GPIO_PIN_6, GPIO_PIN_SET);
+        HAL_GPIO_WritePin(GPIOD, GPIO_PIN_13, GPIO_PIN_SET);
 
         for( uint32_t i = 0; i < 200000; i++ ){
-          ;
         }
-        HAL_GPIO_WritePin( GPIOD, GPIO_PIN_6, GPIO_PIN_RESET );
-        HAL_GPIO_WritePin( GPIOD, GPIO_PIN_13, GPIO_PIN_RESET );
+        HAL_GPIO_WritePin(GPIOD, GPIO_PIN_6, GPIO_PIN_RESET);
+        HAL_GPIO_WritePin(GPIOD, GPIO_PIN_13, GPIO_PIN_RESET);
 
         for( uint32_t i = 0; i < 500000; i++ ){
-          ;
         }
       }
     } else {
-      xdev_out( __io_putchar );
+      xdev_out(__io_putchar);
 
       while( 1 ){
-        xprintf( "HelloWorld\n" );
-        xprintf( "HelloWorld%d\n", 114514 );
-        HAL_GPIO_WritePin( GPIOD, GPIO_PIN_6, GPIO_PIN_SET );
-        HAL_GPIO_WritePin( GPIOD, GPIO_PIN_13, GPIO_PIN_SET );
+        MW_printf("HelloWorld\n");
+        MW_printf("Hello%d:%b\n", 114514, 114514);
+
+        message("msg", "in infinity loop%d", i++);
+        MW_flush();
+        HAL_GPIO_WritePin(GPIOD, GPIO_PIN_6, GPIO_PIN_SET);
+        HAL_GPIO_WritePin(GPIOD, GPIO_PIN_13, GPIO_PIN_SET);
 
         for( int i = 0; i < 500000; i++ ){
-          ;
         }
 
-        HAL_GPIO_WritePin( GPIOD, GPIO_PIN_6, GPIO_PIN_RESET );
-        HAL_GPIO_WritePin( GPIOD, GPIO_PIN_13, GPIO_PIN_RESET );
+        HAL_GPIO_WritePin(GPIOD, GPIO_PIN_6, GPIO_PIN_RESET);
+        HAL_GPIO_WritePin(GPIOD, GPIO_PIN_13, GPIO_PIN_RESET);
 
         for( int i = 0; i < 500000; i++ ){
-          ;
         }
       }
     }
   }
-}
+} /* main */
 
-void Delay( volatile unsigned long delay ) {
+void Delay(volatile unsigned long delay) {
   for(; delay; --delay ){
-    ;
   }
 }
 
@@ -146,10 +145,6 @@ void GPIO_Config() {
 
   GPIOD->CRL = 0x42444444;
   GPIOD->CRH = 0x44244444;
-
-  __HAL_RCC_GPIOA_CLK_ENABLE();
-
-  __HAL_RCC_USART2_CLK_ENABLE();
 
   /* GPIO_InitStruct.Pin = GPIO_PIN_2; */
   /* GPIO_InitStruct.Mode = GPIO_MODE_AF_PP; */
@@ -161,7 +156,7 @@ void GPIO_Config() {
       GPIO_NOPULL,
       GPIO_SPEED_FREQ_HIGH,
     };
-    HAL_GPIO_Init( GPIOA, &gpio );
+    HAL_GPIO_Init(GPIOA, &gpio);
   }
 
   {
@@ -171,16 +166,6 @@ void GPIO_Config() {
       GPIO_NOPULL,
       GPIO_SPEED_FREQ_HIGH
     };
-    HAL_GPIO_Init( GPIOA, &gpio );
+    HAL_GPIO_Init(GPIOA, &gpio);
   }
-  /*    GPIO_InitTypeDef	GPIO_InitStructure;
-    *
-    *  RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);
-    *
-    *  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0 | GPIO_Pin_1;
-    *  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_10MHz;
-    *  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
-    *  GPIO_Init(GPIOB, &GPIO_InitStructure);
-    */
-}
-
+} /* GPIO_Config */
