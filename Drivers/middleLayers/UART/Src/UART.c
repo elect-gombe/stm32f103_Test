@@ -10,3 +10,4 @@ int32_t UARTWrite(uint8_t hello) {
   UNUSED(hello);
   return 114514;
 }
+

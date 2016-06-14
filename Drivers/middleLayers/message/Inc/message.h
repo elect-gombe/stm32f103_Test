@@ -13,6 +13,6 @@ void _msg(const char* type,
 
 void MW_printf(const char* fmt,...);
 
-void flush(void);
+void MW_flush(void);
 
 #endif
