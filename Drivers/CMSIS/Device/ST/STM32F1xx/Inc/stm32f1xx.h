@@ -63,7 +63,7 @@ extern "C" {
 /** @addtogroup Library_configuration_section
   * @{
   */
-
+//#define STM32F103xB
 /**
   * @brief STM32 Family
   */

@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    stm32f1xx_hal_iwdg.h
   * @author  MCD Application Team
-  * @version V1.0.3
-  * @date    11-January-2016
+  * @version V1.0.4
+  * @date    29-April-2016
   * @brief   Header file of IWDG HAL module.
   ******************************************************************************
   * @attention
@@ -33,14 +33,14 @@
   * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   *
   ******************************************************************************
-  */
+  */ 
 
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __STM32F1xx_HAL_IWDG_H
 #define __STM32F1xx_HAL_IWDG_H
 
 #ifdef __cplusplus
-extern "C" {
+ extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
@@ -52,7 +52,7 @@ extern "C" {
 
 /** @addtogroup IWDG
   * @{
-  */
+  */ 
 
 /* Exported types ------------------------------------------------------------*/
 
@@ -60,9 +60,9 @@ extern "C" {
   * @{
   */
 
-/**
-  * @brief  IWDG HAL State Structure definition
-  */
+/** 
+  * @brief  IWDG HAL State Structure definition  
+  */ 
 typedef enum
 {
   HAL_IWDG_STATE_RESET     = 0x00,  /*!< IWDG not yet initialized or disabled */
@@ -70,35 +70,36 @@ typedef enum
   HAL_IWDG_STATE_BUSY      = 0x02,  /*!< IWDG internal process is ongoing     */
   HAL_IWDG_STATE_TIMEOUT   = 0x03,  /*!< IWDG timeout state                   */
   HAL_IWDG_STATE_ERROR     = 0x04   /*!< IWDG error state                     */
+    
+}HAL_IWDG_StateTypeDef;
 
-}
-HAL_IWDG_StateTypeDef;
-
-/**
-  * @brief  IWDG Init structure definition
-  */
-typedef struct {
-  uint32_t Prescaler;  /*!< Select the prescaler of the IWDG.
+/** 
+  * @brief  IWDG Init structure definition  
+  */ 
+typedef struct
+{
+  uint32_t Prescaler;  /*!< Select the prescaler of the IWDG.  
                             This parameter can be a value of @ref IWDG_Prescaler */
-
-  uint32_t Reload;     /*!< Specifies the IWDG down-counter reload value.
+  
+  uint32_t Reload;     /*!< Specifies the IWDG down-counter reload value. 
                             This parameter must be a number between Min_Data = 0 and Max_Data = 0x0FFF */
 
-} IWDG_InitTypeDef;
+}IWDG_InitTypeDef;
 
-/**
-  * @brief  IWDG Handle Structure definition
-  */
-typedef struct {
-  IWDG_TypeDef                 *Instance;  /*!< Register base address    */
-
+/** 
+  * @brief  IWDG Handle Structure definition  
+  */ 
+typedef struct
+{
+  IWDG_TypeDef                 *Instance;  /*!< Register base address    */ 
+  
   IWDG_InitTypeDef             Init;       /*!< IWDG required parameters */
-
+  
   HAL_LockTypeDef              Lock;       /*!< IWDG Locking object      */
-
+  
   __IO HAL_IWDG_StateTypeDef   State;      /*!< IWDG communication state */
-
-} IWDG_HandleTypeDef;
+  
+}IWDG_HandleTypeDef;
 
 /**
   * @}
@@ -127,7 +128,7 @@ typedef struct {
 
 /** @defgroup IWDG_Flag_definition IWDG Flag definition
   * @{
-  */
+  */ 
 #define IWDG_FLAG_PVU   ((uint32_t)IWDG_SR_PVU)  /*!< Watchdog counter prescaler value update Flag */
 #define IWDG_FLAG_RVU   ((uint32_t)IWDG_SR_RVU)  /*!< Watchdog counter reload value update Flag    */
 
@@ -137,7 +138,7 @@ typedef struct {
 
 /** @defgroup IWDG_Prescaler IWDG Prescaler
   * @{
-  */
+  */ 
 #define IWDG_PRESCALER_4     ((uint8_t)0x00)  /*!< IWDG prescaler set to 4   */
 #define IWDG_PRESCALER_8     ((uint8_t)(IWDG_PR_PR_0))                  /*!< IWDG prescaler set to 8   */
 #define IWDG_PRESCALER_16    ((uint8_t)(IWDG_PR_PR_1))                  /*!< IWDG prescaler set to 16  */
@@ -148,7 +149,7 @@ typedef struct {
 
 /**
   * @}
-  */
+  */ 
 
 
 /**
@@ -197,7 +198,7 @@ typedef struct {
 
 /**
   * @}
-  */
+  */ 
 
 /* Private macro -------------------------------------------------------------*/
 
@@ -255,7 +256,7 @@ void HAL_IWDG_MspInit(IWDG_HandleTypeDef *hiwdg);
 /**
   * @}
   */
-
+  
 /** @addtogroup IWDG_Exported_Functions_Group2
   * @{
   */
@@ -266,7 +267,7 @@ HAL_StatusTypeDef HAL_IWDG_Refresh(IWDG_HandleTypeDef *hiwdg);
 /**
   * @}
   */
-
+  
 /** @addtogroup IWDG_Exported_Functions_Group3
   * @{
   */
@@ -275,20 +276,20 @@ HAL_IWDG_StateTypeDef HAL_IWDG_GetState(IWDG_HandleTypeDef *hiwdg);
 
 /**
   * @}
-  */
+  */ 
 
 /**
   * @}
-  */
+  */ 
+  
+/**
+  * @}
+  */ 
 
 /**
   * @}
-  */
-
-/**
-  * @}
-  */
-
+  */ 
+  
 #ifdef __cplusplus
 }
 #endif

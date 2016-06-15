@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    stm32f1xx_hal_sd.h
   * @author  MCD Application Team
-  * @version V1.0.3
-  * @date    11-January-2016
+  * @version V1.0.4
+  * @date    29-April-2016
   * @brief   Header file of SD HAL module.
   ******************************************************************************
   * @attention
@@ -33,7 +33,7 @@
   * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   *
   ******************************************************************************
-  */
+  */ 
 
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __STM32F1xx_HAL_SD_H
@@ -42,7 +42,7 @@
 #if defined(STM32F103xE) || defined(STM32F103xG)
 
 #ifdef __cplusplus
-extern "C" {
+ extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
@@ -54,52 +54,54 @@ extern "C" {
 
 /** @addtogroup SD
   * @{
-  */
+  */ 
 
-/* Exported types ------------------------------------------------------------*/
+/* Exported types ------------------------------------------------------------*/ 
 /** @defgroup SD_Exported_Types SD Exported Types
   * @{
   */
 
-#define SD_InitTypeDef      SDIO_InitTypeDef
+#define SD_InitTypeDef      SDIO_InitTypeDef 
 #define SD_TypeDef          SDIO_TypeDef
 
-/**
-  * @brief  SDIO Handle Structure definition
-  */
-typedef struct {
+/** 
+  * @brief  SDIO Handle Structure definition  
+  */ 
+typedef struct
+{
   SD_TypeDef                   *Instance;        /*!< SDIO register base address                     */
-
+  
   SD_InitTypeDef               Init;             /*!< SD required parameters                         */
-
+  
   HAL_LockTypeDef              Lock;             /*!< SD locking object                              */
-
+  
   uint32_t                     CardType;         /*!< SD card type                                   */
-
+  
   uint32_t                     RCA;              /*!< SD relative card address                       */
-
+  
   uint32_t                     CSD[4];           /*!< SD card specific data table                    */
-
+  
   uint32_t                     CID[4];           /*!< SD card identification number table            */
-
+  
   __IO uint32_t                SdTransferCplt;   /*!< SD transfer complete flag in non blocking mode */
-
+  
   __IO uint32_t                SdTransferErr;    /*!< SD transfer error flag in non blocking mode    */
-
+  
   __IO uint32_t                DmaTransferCplt;  /*!< SD DMA transfer complete flag                  */
-
+  
   __IO uint32_t                SdOperation;      /*!< SD transfer operation (read/write)             */
-
+  
   DMA_HandleTypeDef            *hdmarx;          /*!< SD Rx DMA handle parameters                    */
-
+  
   DMA_HandleTypeDef            *hdmatx;          /*!< SD Tx DMA handle parameters                    */
+  
+}SD_HandleTypeDef;
 
-} SD_HandleTypeDef;
-
-/**
-  * @brief  Card Specific Data: CSD Register
-  */
-typedef struct {
+/** 
+  * @brief  Card Specific Data: CSD Register   
+  */ 
+typedef struct
+{
   __IO uint8_t  CSDStruct;            /*!< CSD structure                         */
   __IO uint8_t  SysSpecVersion;       /*!< System specification version          */
   __IO uint8_t  Reserved1;            /*!< Reserved                              */
@@ -138,12 +140,13 @@ typedef struct {
   __IO uint8_t  CSD_CRC;              /*!< CSD CRC                               */
   __IO uint8_t  Reserved4;            /*!< Always 1                              */
 
-} HAL_SD_CSDTypedef;
+}HAL_SD_CSDTypedef;
 
-/**
-  * @brief  Card Identification Data: CID Register
+/** 
+  * @brief  Card Identification Data: CID Register   
   */
-typedef struct {
+typedef struct
+{
   __IO uint8_t  ManufacturerID;  /*!< Manufacturer ID       */
   __IO uint16_t OEM_AppliID;     /*!< OEM/Application ID    */
   __IO uint32_t ProdName1;       /*!< Product Name part1    */
@@ -155,12 +158,13 @@ typedef struct {
   __IO uint8_t  CID_CRC;         /*!< CID CRC               */
   __IO uint8_t  Reserved2;       /*!< Always 1              */
 
-} HAL_SD_CIDTypedef;
+}HAL_SD_CIDTypedef;
 
-/**
-  * @brief SD Card Status returned by ACMD13
+/** 
+  * @brief SD Card Status returned by ACMD13  
   */
-typedef struct {
+typedef struct
+{
   __IO uint8_t  DAT_BUS_WIDTH;           /*!< Shows the currently defined data bus width                 */
   __IO uint8_t  SECURED_MODE;            /*!< Card is in secured mode of operation                       */
   __IO uint16_t SD_CARD_TYPE;            /*!< Carries information about card type                        */
@@ -172,12 +176,13 @@ typedef struct {
   __IO uint8_t  ERASE_TIMEOUT;           /*!< Determines the timeout for any number of AU erase          */
   __IO uint8_t  ERASE_OFFSET;            /*!< Carries information about the erase offset                 */
 
-} HAL_SD_CardStatusTypedef;
+}HAL_SD_CardStatusTypedef;
 
-/**
-  * @brief SD Card information structure
+/** 
+  * @brief SD Card information structure 
   */
-typedef struct {
+typedef struct
+{
   HAL_SD_CSDTypedef   SD_csd;         /*!< SD card specific data register         */
   HAL_SD_CIDTypedef   SD_cid;         /*!< SD card identification number register */
   uint64_t            CardCapacity;   /*!< Card capacity                          */
@@ -185,15 +190,16 @@ typedef struct {
   uint16_t            RCA;            /*!< SD relative card address               */
   uint8_t             CardType;       /*!< SD card type                           */
 
-} HAL_SD_CardInfoTypedef;
+}HAL_SD_CardInfoTypedef;
 
-/**
-  * @brief  SD Error status enumeration Structure definition
+/** 
+  * @brief  SD Error status enumeration Structure definition  
   */
-typedef enum {
-  /**
-    * @brief  SD specific error defines
-    */
+typedef enum
+{
+/** 
+  * @brief  SD specific error defines  
+  */   
   SD_CMD_CRC_FAIL                    = (1),   /*!< Command response received (but CRC check failed)              */
   SD_DATA_CRC_FAIL                   = (2),   /*!< Data block sent/received (CRC check failed)                   */
   SD_CMD_RSP_TIMEOUT                 = (3),   /*!< Command response timeout                                      */
@@ -228,9 +234,9 @@ typedef enum {
   SD_SDIO_FUNCTION_FAILED            = (32),
   SD_SDIO_UNKNOWN_FUNCTION           = (33),
 
-  /**
-    * @brief  Standard error defines
-    */
+/** 
+  * @brief  Standard error defines   
+  */ 
   SD_INTERNAL_ERROR                  = (34),
   SD_NOT_CONFIGURED                  = (35),
   SD_REQUEST_PENDING                 = (36),
@@ -239,46 +245,49 @@ typedef enum {
   SD_UNSUPPORTED_FEATURE             = (39),
   SD_UNSUPPORTED_HW                  = (40),
   SD_ERROR                           = (41),
-  SD_OK                              = (0)
+  SD_OK                              = (0) 
 
-} HAL_SD_ErrorTypedef;
+}HAL_SD_ErrorTypedef;
 
-/**
+/** 
   * @brief  SD Transfer state enumeration structure
-  */
-typedef enum {
+  */   
+typedef enum
+{
   SD_TRANSFER_OK    = 0,  /*!< Transfer success      */
   SD_TRANSFER_BUSY  = 1,  /*!< Transfer is occurring */
   SD_TRANSFER_ERROR = 2   /*!< Transfer failed       */
 
-} HAL_SD_TransferStateTypedef;
+}HAL_SD_TransferStateTypedef;
 
-/**
-  * @brief  SD Card State enumeration structure
-  */
-typedef enum {
+/** 
+  * @brief  SD Card State enumeration structure 
+  */   
+typedef enum
+{
   SD_CARD_READY                  = ((uint32_t)0x00000001),  /*!< Card state is ready                     */
   SD_CARD_IDENTIFICATION         = ((uint32_t)0x00000002),  /*!< Card is in identification state         */
   SD_CARD_STANDBY                = ((uint32_t)0x00000003),  /*!< Card is in standby state                */
-  SD_CARD_TRANSFER               = ((uint32_t)0x00000004),  /*!< Card is in transfer state               */
+  SD_CARD_TRANSFER               = ((uint32_t)0x00000004),  /*!< Card is in transfer state               */  
   SD_CARD_SENDING                = ((uint32_t)0x00000005),  /*!< Card is sending an operation            */
   SD_CARD_RECEIVING              = ((uint32_t)0x00000006),  /*!< Card is receiving operation information */
   SD_CARD_PROGRAMMING            = ((uint32_t)0x00000007),  /*!< Card is in programming state            */
   SD_CARD_DISCONNECTED           = ((uint32_t)0x00000008),  /*!< Card is disconnected                    */
   SD_CARD_ERROR                  = ((uint32_t)0x000000FF)   /*!< Card is in error state                  */
 
-} HAL_SD_CardStateTypedef;
+}HAL_SD_CardStateTypedef;
 
-/**
-  * @brief  SD Operation enumeration structure
-  */
-typedef enum {
+/** 
+  * @brief  SD Operation enumeration structure   
+  */   
+typedef enum
+{
   SD_READ_SINGLE_BLOCK    = 0,  /*!< Read single block operation      */
   SD_READ_MULTIPLE_BLOCK  = 1,  /*!< Read multiple blocks operation   */
   SD_WRITE_SINGLE_BLOCK   = 2,  /*!< Write single block operation     */
   SD_WRITE_MULTIPLE_BLOCK = 3   /*!< Write multiple blocks operation  */
 
-} HAL_SD_OperationTypedef;
+}HAL_SD_OperationTypedef;
 
 /**
   * @}
@@ -289,8 +298,8 @@ typedef enum {
   * @{
   */
 
-/**
-  * @brief SD Commands Index
+/** 
+  * @brief SD Commands Index 
   */
 #define SD_CMD_GO_IDLE_STATE                       ((uint8_t)0)   /*!< Resets the SD memory card.                                                               */
 #define SD_CMD_SEND_OP_COND                        ((uint8_t)1)   /*!< Sends host capacity support information and activates the card's initialization process. */
@@ -308,7 +317,7 @@ typedef enum {
 #define SD_CMD_READ_DAT_UNTIL_STOP                 ((uint8_t)11)  /*!< SD card doesn't support it.                                                              */
 #define SD_CMD_STOP_TRANSMISSION                   ((uint8_t)12)  /*!< Forces the card to stop transmission.                                                    */
 #define SD_CMD_SEND_STATUS                         ((uint8_t)13)  /*!< Addressed card sends its status register.                                                */
-#define SD_CMD_HS_BUSTEST_READ                     ((uint8_t)14)
+#define SD_CMD_HS_BUSTEST_READ                     ((uint8_t)14) 
 #define SD_CMD_GO_INACTIVE_STATE                   ((uint8_t)15)  /*!< Sends an addressed card into the inactive state.                                         */
 #define SD_CMD_SET_BLOCKLEN                        ((uint8_t)16)  /*!< Sets the block length (in bytes for SDSC) for all following block commands 
                                                                        (read, write, lock). Default block length is fixed to 512 Bytes. Not effective 
@@ -343,11 +352,11 @@ typedef enum {
                                                                        than a standard command.                                                                 */
 #define SD_CMD_GEN_CMD                             ((uint8_t)56)  /*!< Used either to transfer a data block to the card or to get a data block from the card 
                                                                        for general purpose/application specific commands.                                       */
-#define SD_CMD_NO_CMD                              ((uint8_t)64)
+#define SD_CMD_NO_CMD                              ((uint8_t)64) 
 
-/**
+/** 
   * @brief Following commands are SD Card Specific commands.
-  *        SDIO_APP_CMD should be sent before sending these commands.
+  *        SDIO_APP_CMD should be sent before sending these commands. 
   */
 #define SD_CMD_APP_SD_SET_BUSWIDTH                 ((uint8_t)6)   /*!< (ACMD6) Defines the data bus width to be used for data transfer. The allowed data bus 
                                                                        widths are given in SCR register.                                                          */
@@ -361,9 +370,9 @@ typedef enum {
 #define SD_CMD_SDIO_RW_DIRECT                      ((uint8_t)52)  /*!< For SD I/O card only, reserved for security specification.                                 */
 #define SD_CMD_SDIO_RW_EXTENDED                    ((uint8_t)53)  /*!< For SD I/O card only, reserved for security specification.                                 */
 
-/**
+/** 
   * @brief Following commands are SD Card Specific security commands.
-  *        SD_CMD_APP_CMD should be sent before sending these commands.
+  *        SD_CMD_APP_CMD should be sent before sending these commands. 
   */
 #define SD_CMD_SD_APP_GET_MKB                      ((uint8_t)43)  /*!< For SD card only */
 #define SD_CMD_SD_APP_GET_MID                      ((uint8_t)44)  /*!< For SD card only */
@@ -377,8 +386,8 @@ typedef enum {
 #define SD_CMD_SD_APP_CHANGE_SECURE_AREA           ((uint8_t)49)  /*!< For SD card only */
 #define SD_CMD_SD_APP_SECURE_WRITE_MKB             ((uint8_t)48)  /*!< For SD card only */
 
-/**
-  * @brief Supported SD Memory Cards
+/** 
+  * @brief Supported SD Memory Cards 
   */
 #define STD_CAPACITY_SD_CARD_V1_1             ((uint32_t)0x00000000)
 #define STD_CAPACITY_SD_CARD_V2_0             ((uint32_t)0x00000001)
@@ -391,44 +400,44 @@ typedef enum {
 /**
   * @}
   */
-
+  
 /* Exported macro ------------------------------------------------------------*/
 /** @defgroup SD_Exported_macros SD Exported Macros
   * @brief macros to handle interrupts and specific clock configurations
   * @{
   */
-
+ 
 /**
   * @brief  Enable the SD device.
-  * @param  __HANDLE__: SD Handle
+  * @param  __HANDLE__: SD Handle  
   * @retval None
-  */
+  */ 
 #define __HAL_SD_SDIO_ENABLE(__HANDLE__) __SDIO_ENABLE((__HANDLE__)->Instance)
 
 /**
   * @brief  Disable the SD device.
-  * @param  __HANDLE__: SD Handle
+  * @param  __HANDLE__: SD Handle  
   * @retval None
   */
 #define __HAL_SD_SDIO_DISABLE(__HANDLE__) __SDIO_DISABLE((__HANDLE__)->Instance)
 
 /**
   * @brief  Enable the SDIO DMA transfer.
-  * @param  __HANDLE__: SD Handle
+  * @param  __HANDLE__: SD Handle  
   * @retval None
-  */
+  */ 
 #define __HAL_SD_SDIO_DMA_ENABLE(__HANDLE__) __SDIO_DMA_ENABLE((__HANDLE__)->Instance)
 
 /**
   * @brief  Disable the SDIO DMA transfer.
-  * @param  __HANDLE__: SD Handle
+  * @param  __HANDLE__: SD Handle  
   * @retval None
   */
 #define __HAL_SD_SDIO_DMA_DISABLE(__HANDLE__)  __SDIO_DMA_DISABLE((__HANDLE__)->Instance)
-
+ 
 /**
   * @brief  Enable the SD device interrupt.
-  * @param  __HANDLE__: SD Handle
+  * @param  __HANDLE__: SD Handle  
   * @param  __INTERRUPT__: specifies the SDIO interrupt sources to be enabled.
   *         This parameter can be one or a combination of the following values:
   *            @arg SDIO_IT_CCRCFAIL: Command response received (CRC check failed) interrupt
@@ -440,7 +449,7 @@ typedef enum {
   *            @arg SDIO_IT_CMDREND:  Command response received (CRC check passed) interrupt
   *            @arg SDIO_IT_CMDSENT:  Command sent (no response required) interrupt
   *            @arg SDIO_IT_DATAEND:  Data end (data counter, SDIDCOUNT, is zero) interrupt
-  *            @arg SDIO_IT_STBITERR: Start bit not detected on all data signals in wide
+  *            @arg SDIO_IT_STBITERR: Start bit not detected on all data signals in wide 
   *                                   bus mode interrupt
   *            @arg SDIO_IT_DBCKEND:  Data block sent/received (CRC check passed) interrupt
   *            @arg SDIO_IT_CMDACT:   Command transfer in progress interrupt
@@ -455,14 +464,14 @@ typedef enum {
   *            @arg SDIO_IT_TXDAVL:   Data available in transmit FIFO interrupt
   *            @arg SDIO_IT_RXDAVL:   Data available in receive FIFO interrupt
   *            @arg SDIO_IT_SDIOIT:   SD I/O interrupt received interrupt
-  *            @arg SDIO_IT_CEATAEND: CE-ATA command completion signal received for CMD61 interrupt
+  *            @arg SDIO_IT_CEATAEND: CE-ATA command completion signal received for CMD61 interrupt     
   * @retval None
   */
 #define __HAL_SD_SDIO_ENABLE_IT(__HANDLE__, __INTERRUPT__) __SDIO_ENABLE_IT((__HANDLE__)->Instance, (__INTERRUPT__))
 
 /**
   * @brief  Disable the SD device interrupt.
-  * @param  __HANDLE__: SD Handle
+  * @param  __HANDLE__: SD Handle   
   * @param  __INTERRUPT__: specifies the SDIO interrupt sources to be disabled.
   *          This parameter can be one or a combination of the following values:
   *            @arg SDIO_IT_CCRCFAIL: Command response received (CRC check failed) interrupt
@@ -474,7 +483,7 @@ typedef enum {
   *            @arg SDIO_IT_CMDREND:  Command response received (CRC check passed) interrupt
   *            @arg SDIO_IT_CMDSENT:  Command sent (no response required) interrupt
   *            @arg SDIO_IT_DATAEND:  Data end (data counter, SDIDCOUNT, is zero) interrupt
-  *            @arg SDIO_IT_STBITERR: Start bit not detected on all data signals in wide
+  *            @arg SDIO_IT_STBITERR: Start bit not detected on all data signals in wide 
   *                                   bus mode interrupt
   *            @arg SDIO_IT_DBCKEND:  Data block sent/received (CRC check passed) interrupt
   *            @arg SDIO_IT_CMDACT:   Command transfer in progress interrupt
@@ -489,15 +498,15 @@ typedef enum {
   *            @arg SDIO_IT_TXDAVL:   Data available in transmit FIFO interrupt
   *            @arg SDIO_IT_RXDAVL:   Data available in receive FIFO interrupt
   *            @arg SDIO_IT_SDIOIT:   SD I/O interrupt received interrupt
-  *            @arg SDIO_IT_CEATAEND: CE-ATA command completion signal received for CMD61 interrupt
+  *            @arg SDIO_IT_CEATAEND: CE-ATA command completion signal received for CMD61 interrupt     
   * @retval None
   */
 #define __HAL_SD_SDIO_DISABLE_IT(__HANDLE__, __INTERRUPT__) __SDIO_DISABLE_IT((__HANDLE__)->Instance, (__INTERRUPT__))
 
 /**
-  * @brief  Check whether the specified SD flag is set or not.
-  * @param  __HANDLE__: SD Handle
-  * @param  __FLAG__: specifies the flag to check.
+  * @brief  Check whether the specified SD flag is set or not. 
+  * @param  __HANDLE__: SD Handle   
+  * @param  __FLAG__: specifies the flag to check. 
   *          This parameter can be one of the following values:
   *            @arg SDIO_FLAG_CCRCFAIL: Command response received (CRC check failed)
   *            @arg SDIO_FLAG_DCRCFAIL: Data block sent/received (CRC check failed)
@@ -529,8 +538,8 @@ typedef enum {
 
 /**
   * @brief  Clear the SD's pending flags.
-  * @param  __HANDLE__: SD Handle
-  * @param  __FLAG__: specifies the flag to clear.
+  * @param  __HANDLE__: SD Handle  
+  * @param  __FLAG__: specifies the flag to clear.  
   *          This parameter can be one or a combination of the following values:
   *            @arg SDIO_FLAG_CCRCFAIL: Command response received (CRC check failed)
   *            @arg SDIO_FLAG_DCRCFAIL: Data block sent/received (CRC check failed)
@@ -551,8 +560,8 @@ typedef enum {
 
 /**
   * @brief  Check whether the specified SD interrupt has occurred or not.
-  * @param  __HANDLE__: SD Handle
-  * @param  __INTERRUPT__: specifies the SDIO interrupt source to check.
+  * @param  __HANDLE__: SD Handle   
+  * @param  __INTERRUPT__: specifies the SDIO interrupt source to check. 
   *          This parameter can be one of the following values:
   *            @arg SDIO_IT_CCRCFAIL: Command response received (CRC check failed) interrupt
   *            @arg SDIO_IT_DCRCFAIL: Data block sent/received (CRC check failed) interrupt
@@ -563,7 +572,7 @@ typedef enum {
   *            @arg SDIO_IT_CMDREND:  Command response received (CRC check passed) interrupt
   *            @arg SDIO_IT_CMDSENT:  Command sent (no response required) interrupt
   *            @arg SDIO_IT_DATAEND:  Data end (data counter, SDIDCOUNT, is zero) interrupt
-  *            @arg SDIO_IT_STBITERR: Start bit not detected on all data signals in wide
+  *            @arg SDIO_IT_STBITERR: Start bit not detected on all data signals in wide 
   *                                   bus mode interrupt
   *            @arg SDIO_IT_DBCKEND:  Data block sent/received (CRC check passed) interrupt
   *            @arg SDIO_IT_CMDACT:   Command transfer in progress interrupt
@@ -586,7 +595,7 @@ typedef enum {
 /**
   * @brief  Clear the SD's interrupt pending bits.
   * @param  __HANDLE__ : SD Handle
-  * @param  __INTERRUPT__: specifies the interrupt pending bit to clear.
+  * @param  __INTERRUPT__: specifies the interrupt pending bit to clear. 
   *          This parameter can be one or a combination of the following values:
   *            @arg SDIO_IT_CCRCFAIL: Command response received (CRC check failed) interrupt
   *            @arg SDIO_IT_DCRCFAIL: Data block sent/received (CRC check failed) interrupt
@@ -597,7 +606,7 @@ typedef enum {
   *            @arg SDIO_IT_CMDREND:  Command response received (CRC check passed) interrupt
   *            @arg SDIO_IT_CMDSENT:  Command sent (no response required) interrupt
   *            @arg SDIO_IT_DATAEND:  Data end (data counter, SDIO_DCOUNT, is zero) interrupt
-  *            @arg SDIO_IT_STBITERR: Start bit not detected on all data signals in wide
+  *            @arg SDIO_IT_STBITERR: Start bit not detected on all data signals in wide 
   *                                   bus mode interrupt
   *            @arg SDIO_IT_SDIOIT:   SD I/O interrupt received interrupt
   *            @arg SDIO_IT_CEATAEND: CE-ATA command completion signal received for CMD61
@@ -607,7 +616,7 @@ typedef enum {
 /**
   * @}
   */
-
+  
 /* Exported functions --------------------------------------------------------*/
 /** @addtogroup SD_Exported_Functions
   * @{
@@ -618,7 +627,7 @@ typedef enum {
   * @{
   */
 HAL_SD_ErrorTypedef HAL_SD_Init(SD_HandleTypeDef *hsd, HAL_SD_CardInfoTypedef *SDCardInfo);
-HAL_StatusTypeDef   HAL_SD_DeInit(SD_HandleTypeDef *hsd);
+HAL_StatusTypeDef   HAL_SD_DeInit (SD_HandleTypeDef *hsd);
 void HAL_SD_MspInit(SD_HandleTypeDef *hsd);
 void HAL_SD_MspDeInit(SD_HandleTypeDef *hsd);
 /**
@@ -653,7 +662,7 @@ HAL_SD_ErrorTypedef HAL_SD_CheckReadOperation(SD_HandleTypeDef *hsd, uint32_t Ti
 /**
   * @}
   */
-
+  
 /* Peripheral Control functions  ************************************************/
 /** @addtogroup SD_Exported_Functions_Group3
   * @{
@@ -661,11 +670,11 @@ HAL_SD_ErrorTypedef HAL_SD_CheckReadOperation(SD_HandleTypeDef *hsd, uint32_t Ti
 HAL_SD_ErrorTypedef HAL_SD_Get_CardInfo(SD_HandleTypeDef *hsd, HAL_SD_CardInfoTypedef *pCardInfo);
 HAL_SD_ErrorTypedef HAL_SD_WideBusOperation_Config(SD_HandleTypeDef *hsd, uint32_t WideMode);
 HAL_SD_ErrorTypedef HAL_SD_StopTransfer(SD_HandleTypeDef *hsd);
-HAL_SD_ErrorTypedef HAL_SD_HighSpeed(SD_HandleTypeDef *hsd);
+HAL_SD_ErrorTypedef HAL_SD_HighSpeed (SD_HandleTypeDef *hsd);
 /**
   * @}
   */
-
+  
 /* Peripheral State functions  **************************************************/
 /** @addtogroup SD_Exported_Functions_Group4
   * @{
@@ -680,10 +689,10 @@ HAL_SD_TransferStateTypedef HAL_SD_GetStatus(SD_HandleTypeDef *hsd);
 /**
   * @}
   */
-
+  
 /**
   * @}
-  */
+  */ 
 
 /**
   * @}
@@ -695,6 +704,6 @@ HAL_SD_TransferStateTypedef HAL_SD_GetStatus(SD_HandleTypeDef *hsd);
 
 #endif /* STM32F103xE || STM32F103xG */
 
-#endif /* __STM32F1xx_HAL_SD_H */
+#endif /* __STM32F1xx_HAL_SD_H */ 
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

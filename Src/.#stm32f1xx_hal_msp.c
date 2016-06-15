@@ -1,1 +1,0 @@
-oishi@oishi-dynabook-AB55-RGSD.2742:1464404758

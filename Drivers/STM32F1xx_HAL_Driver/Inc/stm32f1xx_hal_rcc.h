@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    stm32f1xx_hal_rcc.h
   * @author  MCD Application Team
-  * @version V1.0.3
-  * @date    11-January-2016
+  * @version V1.0.4
+  * @date    29-April-2016
   * @brief   Header file of RCC HAL module.
   ******************************************************************************
   * @attention
@@ -40,7 +40,7 @@
 #define __STM32F1xx_HAL_RCC_H
 
 #ifdef __cplusplus
-extern "C" {
+ extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
@@ -60,23 +60,22 @@ extern "C" {
 
 /** @defgroup RCC_Timeout RCC Timeout
   * @{
-  */
-
+  */ 
+  
 /* Disable Backup domain write protection state change timeout */
 #define RCC_DBP_TIMEOUT_VALUE  ((uint32_t)100)       /* 100 ms */
 /* LSE state change timeout */
 #define RCC_LSE_TIMEOUT_VALUE      LSE_STARTUP_TIMEOUT
 #define CLOCKSWITCH_TIMEOUT_VALUE  ((uint32_t)5000)  /* 5 s    */
 #define HSE_TIMEOUT_VALUE          HSE_STARTUP_TIMEOUT
-#define HSI_TIMEOUT_VALUE         ((uint32_t)2)      /* 2 ms */
-#define LSI_TIMEOUT_VALUE         ((uint32_t)2)      /* 2 ms */
-#define PLL_TIMEOUT_VALUE         ((uint32_t)2)      /* 2 ms */
+#define HSI_TIMEOUT_VALUE         ((uint32_t)2)      /* 2 ms (minimum Tick + 1) */
+#define LSI_TIMEOUT_VALUE         ((uint32_t)2)      /* 2 ms (minimum Tick + 1) */
+#define PLL_TIMEOUT_VALUE         ((uint32_t)2)      /* 2 ms (minimum Tick + 1) */
 #define LSI_VALUE                 ((uint32_t)40000)  /* 40kHz */
-
 /**
   * @}
   */
-
+  
 /** @defgroup RCC_Register_Offset Register offsets
   * @{
   */
@@ -144,7 +143,7 @@ extern "C" {
 /**
   * @}
   */
-
+  
 /* CR register byte 2 (Bits[23:16]) base address */
 #define RCC_CR_BYTE2_ADDRESS          ((uint32_t)(RCC_BASE + RCC_CR_OFFSET + 0x02))
 
@@ -215,7 +214,7 @@ extern "C" {
                                ((__PCLK__) == RCC_HCLK_DIV4) || ((__PCLK__) == RCC_HCLK_DIV8) || \
                                ((__PCLK__) == RCC_HCLK_DIV16))
 #define IS_RCC_MCO(__MCO__)  ((__MCO__) == RCC_MCO)
-#define IS_RCC_MCODIV(__DIV__) (((__DIV__) == RCC_MCODIV_1))
+#define IS_RCC_MCODIV(__DIV__) (((__DIV__) == RCC_MCODIV_1)) 
 #define IS_RCC_RTCCLKSOURCE(__SOURCE__)  (((__SOURCE__) == RCC_RTCCLKSOURCE_NO_CLK) || \
                                           ((__SOURCE__) == RCC_RTCCLKSOURCE_LSE)  || \
                                           ((__SOURCE__) == RCC_RTCCLKSOURCE_LSI)  || \
@@ -231,24 +230,26 @@ extern "C" {
   * @{
   */
 
-/**
-  * @brief  RCC PLL configuration structure definition
+/** 
+  * @brief  RCC PLL configuration structure definition  
   */
-typedef struct {
+typedef struct
+{
   uint32_t PLLState;      /*!< PLLState: The new state of the PLL.
                               This parameter can be a value of @ref RCC_PLL_Config */
 
   uint32_t PLLSource;     /*!< PLLSource: PLL entry clock source.
-                              This parameter must be a value of @ref RCC_PLL_Clock_Source */
+                              This parameter must be a value of @ref RCC_PLL_Clock_Source */          
 
   uint32_t PLLMUL;        /*!< PLLMUL: Multiplication factor for PLL VCO input clock
                               This parameter must be a value of @ref RCCEx_PLL_Multiplication_Factor */
 } RCC_PLLInitTypeDef;
-
+   
 /**
-  * @brief  RCC System, AHB and APB busses clock configuration structure definition
+  * @brief  RCC System, AHB and APB busses clock configuration structure definition  
   */
-typedef struct {
+typedef struct
+{
   uint32_t ClockType;             /*!< The clock to be configured.
                                        This parameter can be a value of @ref RCC_System_Clock_Type */
 
@@ -321,8 +322,8 @@ typedef struct {
 /** @defgroup RCC_HSI_Config HSI Config
   * @{
   */
-#define RCC_HSI_OFF                      ((uint32_t)0x00000000)   /*!< HSI clock deactivation */
-#define RCC_HSI_ON                       RCC_CR_HSION             /*!< HSI clock activation */
+#define RCC_HSI_OFF                      ((uint32_t)0x00000000)           /*!< HSI clock deactivation */
+#define RCC_HSI_ON                       RCC_CR_HSION                     /*!< HSI clock activation */
 
 #define RCC_HSICALIBRATION_DEFAULT       ((uint32_t)0x10)         /* Default HSI calibration trimming value */
 
@@ -401,7 +402,7 @@ typedef struct {
 /**
   * @}
   */
-
+  
 /** @defgroup RCC_APB1_APB2_Clock_Source APB1 APB2 Clock Source
   * @{
   */
@@ -419,8 +420,8 @@ typedef struct {
   * @{
   */
 #define RCC_RTCCLKSOURCE_NO_CLK          ((uint32_t)0x00000000)                 /*!< No clock */
-#define RCC_RTCCLKSOURCE_LSE             RCC_BDCR_RTCSEL_LSE                    /*!< LSE oscillator clock used as RTC clock */
-#define RCC_RTCCLKSOURCE_LSI             RCC_BDCR_RTCSEL_LSI                    /*!< LSI oscillator clock used as RTC clock */
+#define RCC_RTCCLKSOURCE_LSE             RCC_BDCR_RTCSEL_LSE                  /*!< LSE oscillator clock used as RTC clock */
+#define RCC_RTCCLKSOURCE_LSI             RCC_BDCR_RTCSEL_LSI                  /*!< LSI oscillator clock used as RTC clock */
 #define RCC_RTCCLKSOURCE_HSE_DIV128      RCC_BDCR_RTCSEL_HSE                    /*!< HSE oscillator clock divided by 128 used as RTC clock */
 /**
   * @}
@@ -449,16 +450,16 @@ typedef struct {
 /** @defgroup RCC_Interrupt Interrupts
   * @{
   */
-#define RCC_IT_LSIRDY                    ((uint8_t)RCC_CIR_LSIRDYF) /*!< LSI Ready Interrupt flag */
-#define RCC_IT_LSERDY                    ((uint8_t)RCC_CIR_LSERDYF) /*!< LSE Ready Interrupt flag */
-#define RCC_IT_HSIRDY                    ((uint8_t)RCC_CIR_HSIRDYF) /*!< HSI Ready Interrupt flag */
-#define RCC_IT_HSERDY                    ((uint8_t)RCC_CIR_HSERDYF) /*!< HSE Ready Interrupt flag */
-#define RCC_IT_PLLRDY                    ((uint8_t)RCC_CIR_PLLRDYF) /*!< PLL Ready Interrupt flag */
-#define RCC_IT_CSS                       ((uint8_t)RCC_CIR_CSSF)    /*!< Clock Security System Interrupt flag */
+#define RCC_IT_LSIRDY                    ((uint8_t)RCC_CIR_LSIRDYF)   /*!< LSI Ready Interrupt flag */
+#define RCC_IT_LSERDY                    ((uint8_t)RCC_CIR_LSERDYF)   /*!< LSE Ready Interrupt flag */
+#define RCC_IT_HSIRDY                    ((uint8_t)RCC_CIR_HSIRDYF)   /*!< HSI Ready Interrupt flag */
+#define RCC_IT_HSERDY                    ((uint8_t)RCC_CIR_HSERDYF)   /*!< HSE Ready Interrupt flag */
+#define RCC_IT_PLLRDY                    ((uint8_t)RCC_CIR_PLLRDYF)   /*!< PLL Ready Interrupt flag */
+#define RCC_IT_CSS                       ((uint8_t)RCC_CIR_CSSF)      /*!< Clock Security System Interrupt flag */
 /**
   * @}
-  */
-
+  */ 
+  
 /** @defgroup RCC_Flag Flags
   *        Elements values convention: XXXYYYYYb
   *           - YYYYY  : Flag position in the register
@@ -475,7 +476,6 @@ typedef struct {
 
 /* Flags in the CSR register */
 #define RCC_FLAG_LSIRDY                  ((uint8_t)((CSR_REG_INDEX << 5) | POSITION_VAL(RCC_CSR_LSIRDY)))   /*!< Internal Low Speed oscillator Ready */
-#define RCC_FLAG_RMV                     ((uint8_t)((CSR_REG_INDEX << 5) | RCC_RMVF_BIT_NUMBER))     /*!< Remove reset flag */
 #define RCC_FLAG_PINRST                  ((uint8_t)((CSR_REG_INDEX << 5) | POSITION_VAL(RCC_CSR_PINRSTF)))  /*!< PIN reset flag */
 #define RCC_FLAG_PORRST                  ((uint8_t)((CSR_REG_INDEX << 5) | POSITION_VAL(RCC_CSR_PORRSTF)))  /*!< POR/PDR reset flag */
 #define RCC_FLAG_SFTRST                  ((uint8_t)((CSR_REG_INDEX << 5) | POSITION_VAL(RCC_CSR_SFTRSTF)))  /*!< Software Reset flag */
@@ -503,8 +503,8 @@ typedef struct {
 /** @defgroup RCC_Peripheral_Clock_Enable_Disable Peripheral Clock Enable Disable
   * @brief  Enable or disable the AHB1 peripheral clock.
   * @note   After reset, the peripheral clock (used for registers read/write access)
-  *         is disabled and the application software has to enable this clock before
-  *         using it.
+  *         is disabled and the application software has to enable this clock before 
+  *         using it.   
   * @{
   */
 #define __HAL_RCC_DMA1_CLK_ENABLE()   do { \
@@ -572,9 +572,9 @@ typedef struct {
 /** @defgroup RCC_APB1_Clock_Enable_Disable APB1 Clock Enable Disable
   * @brief  Enable or disable the Low Speed APB (APB1) peripheral clock.
   * @note   After reset, the peripheral clock (used for registers read/write access)
-  *         is disabled and the application software has to enable this clock before
-  *         using it.
-  * @{
+  *         is disabled and the application software has to enable this clock before 
+  *         using it. 
+  * @{   
   */
 #define __HAL_RCC_TIM2_CLK_ENABLE()   do { \
                                         __IO uint32_t tmpreg; \
@@ -675,9 +675,9 @@ typedef struct {
 /** @defgroup RCC_APB2_Clock_Enable_Disable APB2 Clock Enable Disable
   * @brief  Enable or disable the High Speed APB (APB2) peripheral clock.
   * @note   After reset, the peripheral clock (used for registers read/write access)
-  *         is disabled and the application software has to enable this clock before
+  *         is disabled and the application software has to enable this clock before 
   *         using it.
-  * @{
+  * @{   
   */
 #define __HAL_RCC_AFIO_CLK_ENABLE()   do { \
                                         __IO uint32_t tmpreg; \
@@ -765,7 +765,7 @@ typedef struct {
 /**
   * @}
   */
-
+  
 /** @defgroup RCC_APB2_Peripheral_Clock_Enable_Disable_Status APB2 Peripheral Clock Enable Disable Status
   * @brief  Get the enable or disable status of the APB2 peripheral clock.
   * @note   After reset, the peripheral clock (used for registers read/write access)
@@ -799,9 +799,9 @@ typedef struct {
 
 /** @defgroup RCC_APB1_Force_Release_Reset APB1 Force Release Reset
   * @brief  Force or release APB1 peripheral reset.
-  * @{
+  * @{   
   */
-#define __HAL_RCC_APB1_FORCE_RESET()       (RCC->APB2RSTR = 0xFFFFFFFF)
+#define __HAL_RCC_APB1_FORCE_RESET()       (RCC->APB2RSTR = 0xFFFFFFFFU)  
 #define __HAL_RCC_TIM2_FORCE_RESET()       (RCC->APB1RSTR |= (RCC_APB1RSTR_TIM2RST))
 #define __HAL_RCC_TIM3_FORCE_RESET()       (RCC->APB1RSTR |= (RCC_APB1RSTR_TIM3RST))
 #define __HAL_RCC_WWDG_FORCE_RESET()       (RCC->APB1RSTR |= (RCC_APB1RSTR_WWDGRST))
@@ -811,7 +811,7 @@ typedef struct {
 #define __HAL_RCC_BKP_FORCE_RESET()        (RCC->APB1RSTR |= (RCC_APB1RSTR_BKPRST))
 #define __HAL_RCC_PWR_FORCE_RESET()        (RCC->APB1RSTR |= (RCC_APB1RSTR_PWRRST))
 
-#define __HAL_RCC_APB1_RELEASE_RESET()      (RCC->APB1RSTR = 0x00)
+#define __HAL_RCC_APB1_RELEASE_RESET()      (RCC->APB1RSTR = 0x00)  
 #define __HAL_RCC_TIM2_RELEASE_RESET()       (RCC->APB1RSTR &= ~(RCC_APB1RSTR_TIM2RST))
 #define __HAL_RCC_TIM3_RELEASE_RESET()       (RCC->APB1RSTR &= ~(RCC_APB1RSTR_TIM3RST))
 #define __HAL_RCC_WWDG_RELEASE_RESET()       (RCC->APB1RSTR &= ~(RCC_APB1RSTR_WWDGRST))
@@ -827,9 +827,9 @@ typedef struct {
 
 /** @defgroup RCC_APB2_Force_Release_Reset APB2 Force Release Reset
   * @brief  Force or release APB2 peripheral reset.
-  * @{
+  * @{   
   */
-#define __HAL_RCC_APB2_FORCE_RESET()       (RCC->APB2RSTR = 0xFFFFFFFF)
+#define __HAL_RCC_APB2_FORCE_RESET()       (RCC->APB2RSTR = 0xFFFFFFFFU)  
 #define __HAL_RCC_AFIO_FORCE_RESET()       (RCC->APB2RSTR |= (RCC_APB2RSTR_AFIORST))
 #define __HAL_RCC_GPIOA_FORCE_RESET()      (RCC->APB2RSTR |= (RCC_APB2RSTR_IOPARST))
 #define __HAL_RCC_GPIOB_FORCE_RESET()      (RCC->APB2RSTR |= (RCC_APB2RSTR_IOPBRST))
@@ -841,7 +841,7 @@ typedef struct {
 #define __HAL_RCC_SPI1_FORCE_RESET()       (RCC->APB2RSTR |= (RCC_APB2RSTR_SPI1RST))
 #define __HAL_RCC_USART1_FORCE_RESET()     (RCC->APB2RSTR |= (RCC_APB2RSTR_USART1RST))
 
-#define __HAL_RCC_APB2_RELEASE_RESET()      (RCC->APB2RSTR = 0x00)
+#define __HAL_RCC_APB2_RELEASE_RESET()      (RCC->APB2RSTR = 0x00)  
 #define __HAL_RCC_AFIO_RELEASE_RESET()       (RCC->APB2RSTR &= ~(RCC_APB2RSTR_AFIORST))
 #define __HAL_RCC_GPIOA_RELEASE_RESET()      (RCC->APB2RSTR &= ~(RCC_APB2RSTR_IOPARST))
 #define __HAL_RCC_GPIOB_RELEASE_RESET()      (RCC->APB2RSTR &= ~(RCC_APB2RSTR_IOPBRST))
@@ -858,18 +858,18 @@ typedef struct {
   */
 
 /** @defgroup RCC_HSI_Configuration HSI Configuration
-  * @{
+  * @{   
   */
 
 /** @brief  Macros to enable or disable the Internal High Speed oscillator (HSI).
   * @note   The HSI is stopped by hardware when entering STOP and STANDBY modes.
   * @note   HSI can not be stopped if it is used as system clock source. In this case,
-  *         you have to select another source of the system clock then stop the HSI.
+  *         you have to select another source of the system clock then stop the HSI.  
   * @note   After enabling the HSI, the application software should wait on HSIRDY
   *         flag to be set indicating that HSI clock is stable and can be used as
-  *         system clock source.
+  *         system clock source.  
   * @note   When the HSI is stopped, HSIRDY flag goes low after 6 HSI oscillator
-  *         clock cycles.
+  *         clock cycles.  
   */
 #define __HAL_RCC_HSI_ENABLE()  (*(__IO uint32_t *) RCC_CR_HSION_BB = ENABLE)
 #define __HAL_RCC_HSI_DISABLE() (*(__IO uint32_t *) RCC_CR_HSION_BB = DISABLE)
@@ -880,7 +880,7 @@ typedef struct {
   * @param  _HSICALIBRATIONVALUE_ specifies the calibration trimming value.
   *         (default is RCC_HSICALIBRATION_DEFAULT).
   *         This parameter must be a number between 0 and 0x1F.
-  */
+  */  
 #define __HAL_RCC_HSI_CALIBRATIONVALUE_ADJUST(_HSICALIBRATIONVALUE_) \
           (MODIFY_REG(RCC->CR, RCC_CR_HSITRIM, (uint32_t)(_HSICALIBRATIONVALUE_) << POSITION_VAL(RCC_CR_HSITRIM)))
 
@@ -889,20 +889,20 @@ typedef struct {
   */
 
 /** @defgroup RCC_LSI_Configuration  LSI Configuration
-  * @{
+  * @{   
   */
 
 /** @brief Macro to enable the Internal Low Speed oscillator (LSI).
-  * @note   After enabling the LSI, the application software should wait on
+  * @note   After enabling the LSI, the application software should wait on 
   *         LSIRDY flag to be set indicating that LSI clock is stable and can
   *         be used to clock the IWDG and/or the RTC.
   */
 #define __HAL_RCC_LSI_ENABLE()  (*(__IO uint32_t *) RCC_CSR_LSION_BB = ENABLE)
 
 /** @brief Macro to disable the Internal Low Speed oscillator (LSI).
-  * @note   LSI can not be disabled if the IWDG is running.
+  * @note   LSI can not be disabled if the IWDG is running.  
   * @note   When the LSI is stopped, LSIRDY flag goes low after 6 LSI oscillator
-  *         clock cycles.
+  *         clock cycles. 
   */
 #define __HAL_RCC_LSI_DISABLE() (*(__IO uint32_t *) RCC_CSR_LSION_BB = DISABLE)
 
@@ -911,7 +911,7 @@ typedef struct {
   */
 
 /** @defgroup RCC_HSE_Configuration HSE Configuration
-  * @{
+  * @{   
   */
 
 /**
@@ -926,7 +926,7 @@ typedef struct {
   *         PLL as system clock. In this case, you have to select another source
   *         of the system clock then change the HSE state (ex. disable it).
   * @note   The HSE is stopped by hardware when entering STOP and STANDBY modes.
-  * @note   This function reset the CSSON bit, so if the Clock security system(CSS)
+  * @note   This function reset the CSSON bit, so if the clock security system(CSS)
   *         was previously enabled you have to enable it again after calling this
   *         function.
   * @param  __STATE__ specifies the new state of the HSE.
@@ -964,16 +964,16 @@ typedef struct {
   */
 
 /** @defgroup RCC_LSE_Configuration LSE Configuration
-  * @{
+  * @{   
   */
 
 /**
   * @brief  Macro to configure the External Low Speed oscillator (LSE).
-  * @note Transitions LSE Bypass to LSE On and LSE On to LSE Bypass are not supported by this macro.
+  * @note Transitions LSE Bypass to LSE On and LSE On to LSE Bypass are not supported by this macro. 
   * @note   As the LSE is in the Backup domain and write access is denied to
-  *         this domain after reset, you have to enable write access using
+  *         this domain after reset, you have to enable write access using 
   *         @ref HAL_PWR_EnableBkUpAccess() function before to configure the LSE
-  *         (to be done once after reset).
+  *         (to be done once after reset).  
   * @note   After enabling the LSE (RCC_LSE_ON or RCC_LSE_BYPASS), the application
   *         software should wait on LSERDY flag to be set indicating that LSE clock
   *         is stable and can be used to clock the RTC.
@@ -1012,11 +1012,11 @@ typedef struct {
   */
 
 /** @defgroup RCC_PLL_Configuration PLL Configuration
-  * @{
+  * @{   
   */
 
 /** @brief Macro to enable the main PLL.
-  * @note   After enabling the main PLL, the application software should wait on
+  * @note   After enabling the main PLL, the application software should wait on 
   *         PLLRDY flag to be set indicating that PLL clock is stable and can
   *         be used as system clock source.
   * @note   The main PLL is disabled by hardware when entering STOP and STANDBY modes.
@@ -1030,33 +1030,33 @@ typedef struct {
 
 /** @brief Macro to configure the main PLL clock source and multiplication factors.
   * @note   This function must be used only when the main PLL is disabled.
-  *
+  *  
   * @param  __RCC_PLLSOURCE__ specifies the PLL entry clock source.
   *          This parameter can be one of the following values:
   *            @arg @ref RCC_PLLSOURCE_HSI_DIV2 HSI oscillator clock selected as PLL clock entry
   *            @arg @ref RCC_PLLSOURCE_HSE HSE oscillator clock selected as PLL clock entry
   * @param  __PLLMUL__ specifies the multiplication factor for PLL VCO output clock
   *          This parameter can be one of the following values:
-  *             @arg @ref RCC_PLL_MUL4 PLLVCO = PLL clock entry x 4
-  *             @arg @ref RCC_PLL_MUL6 PLLVCO = PLL clock entry x 6
+  *             @arg @ref RCC_PLL_MUL4   PLLVCO = PLL clock entry x 4
+  *             @arg @ref RCC_PLL_MUL6   PLLVCO = PLL clock entry x 6
   @if STM32F105xC
   *             @arg @ref RCC_PLL_MUL6_5 PLLVCO = PLL clock entry x 6.5
   @elseif STM32F107xC
   *             @arg @ref RCC_PLL_MUL6_5 PLLVCO = PLL clock entry x 6.5
   @else
-  *             @arg @ref RCC_PLL_MUL2 PLLVCO = PLL clock entry x 2 (*)
-  *             @arg @ref RCC_PLL_MUL3 PLLVCO = PLL clock entry x 3 (*)
-  *             @arg @ref RCC_PLL_MUL10 PLLVCO = PLL clock entry x 10
-  *             @arg @ref RCC_PLL_MUL11 PLLVCO = PLL clock entry x 11
-  *             @arg @ref RCC_PLL_MUL12 PLLVCO = PLL clock entry x 12
-  *             @arg @ref RCC_PLL_MUL13 PLLVCO = PLL clock entry x 13
-  *             @arg @ref RCC_PLL_MUL14 PLLVCO = PLL clock entry x 14
-  *             @arg @ref RCC_PLL_MUL15 PLLVCO = PLL clock entry x 15
-  *             @arg @ref RCC_PLL_MUL16 PLLVCO = PLL clock entry x 16
+  *             @arg @ref RCC_PLL_MUL2   PLLVCO = PLL clock entry x 2
+  *             @arg @ref RCC_PLL_MUL3   PLLVCO = PLL clock entry x 3
+  *             @arg @ref RCC_PLL_MUL10  PLLVCO = PLL clock entry x 10
+  *             @arg @ref RCC_PLL_MUL11  PLLVCO = PLL clock entry x 11
+  *             @arg @ref RCC_PLL_MUL12  PLLVCO = PLL clock entry x 12
+  *             @arg @ref RCC_PLL_MUL13  PLLVCO = PLL clock entry x 13
+  *             @arg @ref RCC_PLL_MUL14  PLLVCO = PLL clock entry x 14
+  *             @arg @ref RCC_PLL_MUL15  PLLVCO = PLL clock entry x 15
+  *             @arg @ref RCC_PLL_MUL16  PLLVCO = PLL clock entry x 16
   @endif
-  *             @arg @ref RCC_PLL_MUL8 PLLVCO = PLL clock entry x 8
-  *             @arg @ref RCC_PLL_MUL9 PLLVCO = PLL clock entry x 9
-  *
+  *             @arg @ref RCC_PLL_MUL8   PLLVCO = PLL clock entry x 8
+  *             @arg @ref RCC_PLL_MUL9   PLLVCO = PLL clock entry x 9
+  *   
   */
 #define __HAL_RCC_PLL_CONFIG(__RCC_PLLSOURCE__, __PLLMUL__)\
           MODIFY_REG(RCC->CFGR, (RCC_CFGR_PLLSRC | RCC_CFGR_PLLMULL),((__RCC_PLLSOURCE__) | (__PLLMUL__) ))
@@ -1074,19 +1074,19 @@ typedef struct {
   */
 
 /** @defgroup RCC_Get_Clock_source Get Clock source
-  * @{
+  * @{   
   */
 
 /**
   * @brief  Macro to configure the system clock source.
-  * @param  __RCC_SYSCLKSOURCE__ specifies the system clock source.
+  * @param  __SYSCLKSOURCE__ specifies the system clock source.
   *          This parameter can be one of the following values:
   *              @arg @ref RCC_SYSCLKSOURCE_HSI HSI oscillator is used as system clock source.
   *              @arg @ref RCC_SYSCLKSOURCE_HSE HSE oscillator is used as system clock source.
   *              @arg @ref RCC_SYSCLKSOURCE_PLLCLK PLL output is used as system clock source.
   */
-#define __HAL_RCC_SYSCLK_CONFIG(__RCC_SYSCLKSOURCE__) \
-                  MODIFY_REG(RCC->CFGR, RCC_CFGR_SW, (__RCC_SYSCLKSOURCE__))
+#define __HAL_RCC_SYSCLK_CONFIG(__SYSCLKSOURCE__) \
+                  MODIFY_REG(RCC->CFGR, RCC_CFGR_SW, (__SYSCLKSOURCE__))
 
 /** @brief  Macro to get the clock source used as system clock.
   * @retval The clock source used as system clock. The returned value can be one
@@ -1102,14 +1102,14 @@ typedef struct {
   */
 
 /** @defgroup RCCEx_MCOx_Clock_Config RCC Extended MCOx Clock Config
-  * @{
-  */
+  * @{   
+  */ 
 
 #if   defined(RCC_CFGR_MCO_3)
 /** @brief  Macro to configure the MCO clock.
   * @param  __MCOCLKSOURCE__ specifies the MCO clock source.
   *         This parameter can be one of the following values:
-  *            @arg @ref RCC_MCO1SOURCE_NOCLOCK      No clock
+  *            @arg @ref RCC_MCO1SOURCE_NOCLOCK      No clock selected as MCO clock
   *            @arg @ref RCC_MCO1SOURCE_SYSCLK       System clock (SYSCLK) selected as MCO clock
   *            @arg @ref RCC_MCO1SOURCE_HSI          HSI selected as MCO clock
   *            @arg @ref RCC_MCO1SOURCE_HSE          HSE selected as MCO clock
@@ -1126,7 +1126,7 @@ typedef struct {
 /** @brief  Macro to configure the MCO clock.
   * @param  __MCOCLKSOURCE__ specifies the MCO clock source.
   *         This parameter can be one of the following values:
-  *            @arg @ref RCC_MCO1SOURCE_NOCLOCK No clock
+  *            @arg @ref RCC_MCO1SOURCE_NOCLOCK No clock selected as MCO clock
   *            @arg @ref RCC_MCO1SOURCE_SYSCLK  System clock (SYSCLK) selected as MCO clock
   *            @arg @ref RCC_MCO1SOURCE_HSI HSI selected as MCO clock
   *            @arg @ref RCC_MCO1SOURCE_HSE HSE selected as MCO clock
@@ -1145,16 +1145,16 @@ typedef struct {
   * @}
   */
 
-/** @defgroup RCC_RTC_Clock_Configuration RCC RTC Clock Configuration
-* @{
-*/
+  /** @defgroup RCC_RTC_Clock_Configuration RCC RTC Clock Configuration
+  * @{   
+  */
 
 /** @brief Macro to configure the RTC clock (RTCCLK).
   * @note   As the RTC clock configuration bits are in the Backup domain and write
   *         access is denied to this domain after reset, you have to enable write
   *         access using the Power Backup Access macro before to configure
-  *         the RTC clock source (to be done once after reset).
-  * @note   Once the RTC clock is configured it can't be changed unless the
+  *         the RTC clock source (to be done once after reset).    
+  * @note   Once the RTC clock is configured it can't be changed unless the  
   *         Backup domain is reset using @ref __HAL_RCC_BACKUPRESET_FORCE() macro, or by
   *         a Power On Reset (POR).
   *
@@ -1167,12 +1167,12 @@ typedef struct {
   * @note   If the LSE or LSI is used as RTC clock source, the RTC continues to
   *         work in STOP and STANDBY modes, and can be used as wakeup source.
   *         However, when the HSE clock is used as RTC clock source, the RTC
-  *         cannot be used in STOP and STANDBY modes.
+  *         cannot be used in STOP and STANDBY modes.    
   * @note   The maximum input clock frequency for RTC is 1MHz (when using HSE as
   *         RTC clock source).
   */
 #define __HAL_RCC_RTC_CONFIG(__RTC_CLKSOURCE__) MODIFY_REG(RCC->BDCR, RCC_BDCR_RTCSEL, (__RTC_CLKSOURCE__))
-
+                                                   
 /** @brief Macro to get the RTC clock source.
   * @retval The clock source can be one of the following values:
   *            @arg @ref RCC_RTCCLKSOURCE_NO_CLK No clock selected as RTC clock
@@ -1245,7 +1245,7 @@ typedef struct {
   *            @arg @ref RCC_IT_PLLI2S2RDY Main PLLI2S ready interrupt.
   @endif
   */
-#define __HAL_RCC_DISABLE_IT(__INTERRUPT__) (*(__IO uint8_t *) RCC_CIR_BYTE1_ADDRESS &= ~(__INTERRUPT__))
+#define __HAL_RCC_DISABLE_IT(__INTERRUPT__) (*(__IO uint8_t *) RCC_CIR_BYTE1_ADDRESS &= (uint8_t)(~(__INTERRUPT__)))
 
 /** @brief Clear the RCC's interrupt pending bits.
   * @param  __INTERRUPT__ specifies the interrupt pending bit to clear.
@@ -1307,9 +1307,9 @@ typedef struct {
   @endif
   *            @arg @ref RCC_FLAG_LSERDY LSE oscillator clock ready.
   *            @arg @ref RCC_FLAG_LSIRDY LSI oscillator clock ready.
-  *            @arg @ref RCC_FLAG_PINRST Pin reset.
-  *            @arg @ref RCC_FLAG_PORRST POR/PDR reset.
-  *            @arg @ref RCC_FLAG_SFTRST Software reset.
+  *            @arg @ref RCC_FLAG_PINRST  Pin reset.
+  *            @arg @ref RCC_FLAG_PORRST  POR/PDR reset.
+  *            @arg @ref RCC_FLAG_SFTRST  Software reset.
   *            @arg @ref RCC_FLAG_IWDGRST Independent Watchdog reset.
   *            @arg @ref RCC_FLAG_WWDGRST Window Watchdog reset.
   *            @arg @ref RCC_FLAG_LPWRRST Low Power reset.
@@ -1317,7 +1317,7 @@ typedef struct {
   */
 #define __HAL_RCC_GET_FLAG(__FLAG__) (((((__FLAG__) >> 5) == CR_REG_INDEX)?   RCC->CR   : \
                                       ((((__FLAG__) >> 5) == BDCR_REG_INDEX)? RCC->BDCR : \
-                                                                             RCC->CSR)) & ((uint32_t)1 << ((__FLAG__) & RCC_FLAG_MASK)))
+                                                                              RCC->CSR)) & ((uint32_t)1 << ((__FLAG__) & RCC_FLAG_MASK)))
 
 /**
   * @}
@@ -1384,7 +1384,7 @@ void              HAL_RCC_CSSCallback(void);
 /**
   * @}
   */
-
+  
 #ifdef __cplusplus
 }
 #endif

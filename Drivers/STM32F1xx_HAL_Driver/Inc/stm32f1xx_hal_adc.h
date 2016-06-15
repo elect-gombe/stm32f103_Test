@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    stm32f1xx_hal_adc.h
   * @author  MCD Application Team
-  * @version V1.0.3
-  * @date    11-January-2016
+  * @version V1.0.4
+  * @date    29-April-2016
   * @brief   Header file containing functions prototypes of ADC HAL library.
   ******************************************************************************
   * @attention
@@ -40,33 +40,34 @@
 #define __STM32F1xx_HAL_ADC_H
 
 #ifdef __cplusplus
-extern "C" {
+ extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
-#include "stm32f1xx_hal_def.h"
+#include "stm32f1xx_hal_def.h"  
 /** @addtogroup STM32F1xx_HAL_Driver
   * @{
   */
 
 /** @addtogroup ADC
   * @{
-  */
+  */ 
 
-/* Exported types ------------------------------------------------------------*/
+/* Exported types ------------------------------------------------------------*/ 
 /** @defgroup ADC_Exported_Types ADC Exported Types
   * @{
   */
 
-/**
-  * @brief  Structure definition of ADC and regular group initialization
+/** 
+  * @brief  Structure definition of ADC and regular group initialization 
   * @note   Parameters of this structure are shared within 2 scopes:
   *          - Scope entire ADC (affects regular and injected groups): DataAlign, ScanConvMode.
   *          - Scope regular group: ContinuousConvMode, NbrOfConversion, DiscontinuousConvMode, NbrOfDiscConversion, ExternalTrigConvEdge, ExternalTrigConv.
   * @note   The setting of these parameters with function HAL_ADC_Init() is conditioned to ADC state.
   *         ADC can be either disabled or enabled without conversion on going on regular group.
   */
-typedef struct {
+typedef struct
+{
   uint32_t DataAlign;             /*!< Specifies ADC data alignment to right (MSB on register bit 11 and LSB on register bit 0) (default setting)
                                        or to left (if regular group: MSB on register bit 15 and LSB on register bit 4, if injected group (MSB kept as signed value due to potential negative value after offset application): MSB on register bit 14 and LSB on register bit 3).
                                        This parameter can be a value of @ref ADC_Data_align */
@@ -98,22 +99,23 @@ typedef struct {
                                        If set to ADC_SOFTWARE_START, external triggers are disabled.
                                        If set to external trigger source, triggering is on event rising edge.
                                        This parameter can be a value of @ref ADC_External_trigger_source_Regular */
-} ADC_InitTypeDef;
+}ADC_InitTypeDef;
 
-/**
-  * @brief  Structure definition of ADC channel for regular group
+/** 
+  * @brief  Structure definition of ADC channel for regular group   
   * @note   The setting of these parameters with function HAL_ADC_ConfigChannel() is conditioned to ADC state.
   *         ADC can be either disabled or enabled without conversion on going on regular group.
-  */
-typedef struct {
+  */ 
+typedef struct 
+{
   uint32_t Channel;                /*!< Specifies the channel to configure into ADC regular group.
                                         This parameter can be a value of @ref ADC_channels
                                         Note: Depending on devices, some channels may not be available on package pins. Refer to device datasheet for channels availability.
-                                        Note: On STM32F1 devices with several ADC: Only ADC1 can access internal measurement channels (VrefInt/TempSensor)
+                                        Note: On STM32F1 devices with several ADC: Only ADC1 can access internal measurement channels (VrefInt/TempSensor) 
                                         Note: On STM32F10xx8 and STM32F10xxB devices: A low-amplitude voltage glitch may be generated (on ADC input 0) on the PA0 pin, when the ADC is converting with injection trigger.
                                               It is advised to distribute the analog channels so that Channel 0 is configured as an injected channel.
                                               Refer to errata sheet of these devices for more details. */
-  uint32_t Rank;                   /*!< Specifies the rank in the regular group sequencer
+  uint32_t Rank;                   /*!< Specifies the rank in the regular group sequencer 
                                         This parameter can be a value of @ref ADC_regular_rank
                                         Note: In case of need to disable a channel or change order of conversion sequencer, rank containing a previous channel setting can be overwritten by the new channel setting (or parameter number of conversions can be adjusted) */
   uint32_t SamplingTime;           /*!< Sampling time value to be set for the selected channel.
@@ -125,14 +127,15 @@ typedef struct {
                                         Note: In case of usage of internal measurement channels (VrefInt/TempSensor),
                                               sampling time constraints must be respected (sampling time can be adjusted in function of ADC clock frequency and sampling time setting)
                                               Refer to device datasheet for timings values, parameters TS_vrefint, TS_temp (values rough order: 5us to 17.1us min). */
-} ADC_ChannelConfTypeDef;
+}ADC_ChannelConfTypeDef;
 
 /**
   * @brief  ADC Configuration analog watchdog definition
   * @note   The setting of these parameters with function is conditioned to ADC state.
   *         ADC state can be either disabled or enabled without conversion on going on regular and injected groups.
   */
-typedef struct {
+typedef struct
+{
   uint32_t WatchdogMode;      /*!< Configures the ADC analog watchdog mode: single/all channels, regular/injected group.
                                    This parameter can be a value of @ref ADC_analog_watchdog_mode. */
   uint32_t Channel;           /*!< Selects which ADC channel to monitor by analog watchdog.
@@ -145,11 +148,11 @@ typedef struct {
   uint32_t LowThreshold;      /*!< Configures the ADC analog watchdog High threshold value.
                                    This parameter must be a number between Min_Data = 0x000 and Max_Data = 0xFFF. */
   uint32_t WatchdogNumber;    /*!< Reserved for future use, can be set to 0 */
-} ADC_AnalogWDGConfTypeDef;
+}ADC_AnalogWDGConfTypeDef;
 
-/**
+/** 
   * @brief  HAL ADC state machine: ADC states definition (bitfields)
-  */
+  */ 
 /* States of ADC global scope */
 #define HAL_ADC_STATE_RESET             ((uint32_t)0x00000000)    /*!< ADC not yet initialized or disabled */
 #define HAL_ADC_STATE_READY             ((uint32_t)0x00000001)    /*!< ADC peripheral ready for use */
@@ -183,10 +186,11 @@ typedef struct {
 #define HAL_ADC_STATE_MULTIMODE_SLAVE   ((uint32_t)0x00100000)    /*!< ADC in multimode slave state, controlled by another ADC master ( */
 
 
-/**
-  * @brief  ADC handle Structure definition
-  */
-typedef struct {
+/** 
+  * @brief  ADC handle Structure definition  
+  */ 
+typedef struct
+{
   ADC_TypeDef                   *Instance;              /*!< Register base address */
 
   ADC_InitTypeDef               Init;                   /*!< ADC required parameters */
@@ -194,11 +198,11 @@ typedef struct {
   DMA_HandleTypeDef             *DMA_Handle;            /*!< Pointer DMA Handler */
 
   HAL_LockTypeDef               Lock;                   /*!< ADC locking object */
-
+  
   __IO uint32_t                 State;                  /*!< ADC communication state (bitmap of ADC states) */
 
   __IO uint32_t                 ErrorCode;              /*!< ADC Error code */
-} ADC_HandleTypeDef;
+}ADC_HandleTypeDef;
 /**
   * @}
   */
@@ -260,7 +264,7 @@ typedef struct {
   */
 /* Note: Depending on devices, some channels may not be available on package  */
 /*       pins. Refer to device datasheet for channels availability.           */
-#define ADC_CHANNEL_0           ((uint32_t)0x00000000)
+#define ADC_CHANNEL_0           ((uint32_t)0x00000000)                                                                          
 #define ADC_CHANNEL_1           ((uint32_t)(                                                                    ADC_SQR3_SQ1_0))
 #define ADC_CHANNEL_2           ((uint32_t)(                                                   ADC_SQR3_SQ1_1                 ))
 #define ADC_CHANNEL_3           ((uint32_t)(                                                   ADC_SQR3_SQ1_1 | ADC_SQR3_SQ1_0))
@@ -382,7 +386,7 @@ typedef struct {
 
 /**
   * @}
-  */
+  */ 
 
 /* Private constants ---------------------------------------------------------*/
 
@@ -470,20 +474,20 @@ typedef struct {
   * @{
   */
 /* Macro for internal HAL driver usage, and possibly can be used into code of */
-/* final user.                                                                */
+/* final user.                                                                */    
 
 /**
   * @brief Enable the ADC peripheral
   * @note ADC enable requires a delay for ADC stabilization time
   *       (refer to device datasheet, parameter tSTAB)
-  * @note On STM32F1, if ADC is already enabled this macro trigs a conversion
+  * @note On STM32F1, if ADC is already enabled this macro trigs a conversion 
   *       SW start on regular group.
   * @param __HANDLE__: ADC handle
   * @retval None
   */
 #define __HAL_ADC_ENABLE(__HANDLE__)                                           \
   (SET_BIT((__HANDLE__)->Instance->CR2, (ADC_CR2_ADON)))
-
+    
 /**
   * @brief Disable the ADC peripheral
   * @param __HANDLE__: ADC handle
@@ -491,7 +495,7 @@ typedef struct {
   */
 #define __HAL_ADC_DISABLE(__HANDLE__)                                          \
   (CLEAR_BIT((__HANDLE__)->Instance->CR2, (ADC_CR2_ADON)))
-
+    
 /** @brief Enable the ADC end of conversion interrupt.
   * @param __HANDLE__: ADC handle
   * @param __INTERRUPT__: ADC Interrupt
@@ -503,7 +507,7 @@ typedef struct {
   */
 #define __HAL_ADC_ENABLE_IT(__HANDLE__, __INTERRUPT__)                         \
   (SET_BIT((__HANDLE__)->Instance->CR1, (__INTERRUPT__)))
-
+    
 /** @brief Disable the ADC end of conversion interrupt.
   * @param __HANDLE__: ADC handle
   * @param __INTERRUPT__: ADC Interrupt
@@ -541,7 +545,7 @@ typedef struct {
   */
 #define __HAL_ADC_GET_FLAG(__HANDLE__, __FLAG__)                               \
   ((((__HANDLE__)->Instance->SR) & (__FLAG__)) == (__FLAG__))
-
+    
 /** @brief Clear the ADC's pending flags
   * @param __HANDLE__: ADC handle
   * @param __FLAG__: ADC flag
@@ -621,7 +625,7 @@ typedef struct {
 
 /**
   * @brief Set ADC number of conversions into regular channel sequence length.
-  * @param _NbrOfConversion_: Regular channel sequence length
+  * @param _NbrOfConversion_: Regular channel sequence length 
   * @retval None
   */
 #define ADC_SQR1_L_SHIFT(_NbrOfConversion_)                                    \
@@ -630,7 +634,7 @@ typedef struct {
 /**
   * @brief Set the ADC's sample time for channel numbers between 10 and 18.
   * @param _SAMPLETIME_: Sample time parameter.
-  * @param _CHANNELNB_: Channel number.
+  * @param _CHANNELNB_: Channel number.  
   * @retval None
   */
 #define ADC_SMPR1(_SAMPLETIME_, _CHANNELNB_)                                   \
@@ -639,7 +643,7 @@ typedef struct {
 /**
   * @brief Set the ADC's sample time for channel numbers between 0 and 9.
   * @param _SAMPLETIME_: Sample time parameter.
-  * @param _CHANNELNB_: Channel number.
+  * @param _CHANNELNB_: Channel number.  
   * @retval None
   */
 #define ADC_SMPR2(_SAMPLETIME_, _CHANNELNB_)                                   \
@@ -648,7 +652,7 @@ typedef struct {
 /**
   * @brief Set the selected regular channel rank for rank between 1 and 6.
   * @param _CHANNELNB_: Channel number.
-  * @param _RANKNB_: Rank number.
+  * @param _RANKNB_: Rank number.    
   * @retval None
   */
 #define ADC_SQR3_RK(_CHANNELNB_, _RANKNB_)                                     \
@@ -657,7 +661,7 @@ typedef struct {
 /**
   * @brief Set the selected regular channel rank for rank between 7 and 12.
   * @param _CHANNELNB_: Channel number.
-  * @param _RANKNB_: Rank number.
+  * @param _RANKNB_: Rank number.    
   * @retval None
   */
 #define ADC_SQR2_RK(_CHANNELNB_, _RANKNB_)                                     \
@@ -666,7 +670,7 @@ typedef struct {
 /**
   * @brief Set the selected regular channel rank for rank between 13 and 16.
   * @param _CHANNELNB_: Channel number.
-  * @param _RANKNB_: Rank number.
+  * @param _RANKNB_: Rank number.    
   * @retval None
   */
 #define ADC_SQR1_RK(_CHANNELNB_, _RANKNB_)                                     \
@@ -732,7 +736,7 @@ typedef struct {
   * Unit: ADC clock cycles
   * @param __HANDLE__: ADC handle
   * @retval ADC conversion cycles on all channels
-  */
+  */   
 #define ADC_CONVCYCLES_MAX_RANGE(__HANDLE__)                                                                     \
     (( (((__HANDLE__)->Instance->SMPR2 & ADC_SAMPLETIME_ALLCHANNELS_SMPR2BIT2) == RESET)  &&                     \
        (((__HANDLE__)->Instance->SMPR1 & ADC_SAMPLETIME_ALLCHANNELS_SMPR1BIT2) == RESET) ) ?                     \
@@ -841,11 +845,11 @@ typedef struct {
 /**
   * @}
   */
-
+      
 /**
   * @}
   */
-
+    
 /* Include ADC HAL Extension module */
 #include "stm32f1xx_hal_adc_ex.h"
 
@@ -942,12 +946,12 @@ void              ADC_DMAHalfConvCplt(DMA_HandleTypeDef *hdma);
 void              ADC_DMAError(DMA_HandleTypeDef *hdma);
 /**
   * @}
-  */
+  */ 
 
 
 /**
   * @}
-  */
+  */ 
 
 /**
   * @}

@@ -1,186 +1,158 @@
-/*
-  * A skeleton main.c
-  * Add your own code!
+/**
+  ******************************************************************************
+  * File Name          : main.c
+  * Description        : Main program body
+  ******************************************************************************
+  *
+  * COPYRIGHT(c) 2016 STMicroelectronics
+  *
+  * Redistribution and use in source and binary forms, with or without modification,
+  * are permitted provided that the following conditions are met:
+  *   1. Redistributions of source code must retain the above copyright notice,
+  *      this list of conditions and the following disclaimer.
+  *   2. Redistributions in binary form must reproduce the above copyright notice,
+  *      this list of conditions and the following disclaimer in the documentation
+  *      and/or other materials provided with the distribution.
+  *   3. Neither the name of STMicroelectronics nor the names of its contributors
+  *      may be used to endorse or promote products derived from this software
+  *      without specific prior written permission.
+  *
+  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+  * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  *
+  ******************************************************************************
   */
-/* Load CMSIS and peripheral library and configuration */
-
+/* Includes ------------------------------------------------------------------*/
 #include "stm32f1xx_hal.h"
-#include "stm32f1xx.h"
-#include <stdint.h>
-#include <stdio.h>
-#include "xprintf.h"
 
-/* Peripheral configuration functions */
-void GPIO_Config();
+/*name rule
+ *
+ * function
+ * 	USARTInit();
+ * 	ADCIint();
+ *
+ * variable
+ *	flag isStart or isEnd
+ *
+ * define
+ *  SPEED
+ *  CLOCK()
+ * struct and enum
+ *
+ * typedef struct or enum
+ * {
+ * 	HOGE;
+ * 	uint32_t hoge;
+ * 	**
+ * 	} hoge_t;
+ *
+ */
 
-/* A simple busy wait loop */
-void Delay( volatile unsigned long delay );
+/* Private function prototypes -----------------------------------------------*/
+void SystemClock_Config(void);
+extern void MW_TIM1Hadler(void);
+extern void MW_TIM2Hadler(void);
 
-uint32_t SystemCoreClock = 72000000;
-
-UART_HandleTypeDef U2handle = {
-  .Instance = USART2,
-  .Init = {
-    .BaudRate = 115200,
-    .WordLength = UART_WORDLENGTH_8B,
-    .StopBits = UART_STOPBITS_2,
-    .Parity = UART_PARITY_NONE,
-    .Mode = UART_MODE_TX_RX,
-    .HwFlowCtl = UART_HWCONTROL_NONE,
-    .OverSampling = UART_OVERSAMPLING_16,
-  }
-};
-
-void SystemInit( void ) {
-  volatile int i[1000] = { 0 };
-  i[1000 - 1] = 1 << 16;
-  i[2] = i[1];
-
-
-  /* Reset the RCC clock configuration to the default reset state(for debug
-   *purpose) and long comment will make new line */
-
-  /*Set HSEBYP bit */
-
-  /*  RCC->CR &= (uint32_t)0x1<<18; */
-
-  /* Set HSEON bit */
-  RCC->CR |= (uint32_t)0x1 << 16;
-
-  /*set 9x8MHz*/
-  RCC->CFGR |= RCC_CFGR_PLLMULL9;
-
-  /*use HSE*/
-  RCC->CFGR |= RCC_CFGR_PLLSRC;
-
-  /*set AHB prescaler 1:2*/
-  RCC->CFGR |= 0x10 << 10;
-
-  FLASH->ACR = 0;
-  /*flash prefetch buffer*/
-  FLASH->ACR |= FLASH_ACR_PRFTBE;
-  /*flash latency*/
-  FLASH->ACR |= FLASH_ACR_LATENCY_2;
-
-  /*wait get ready*/
-  while( !( RCC->CR & ( 0x01 << 17 ))){
-    ;
-  }
-
-  Delay( 10 );
-  /*PLL enable*/
-  RCC->CR |= 0x01 << 24;
-  Delay( 10 );
-
-
-  while( !( RCC->CR & ( 0x01 << 25 ))){
-    ;
-  }
-
-  RCC->CFGR |= 0x02;
-  /*select PLL clock*/
-
-  RCC->CR &= ~(uint32_t)( 0x01 << 16 );
-  SCB->VTOR = FLASH_BASE;
-}
-
-int __io_putchar( int ch ) {
-  HAL_UART_Transmit( &U2handle, (uint8_t*)&ch, 1, 0xFFFF );
-  return ch;
-}
-
-int main( void ) {
-  SystemInit();
-  /* Setup the GPIOs */
-  GPIO_Config();
-
+int main(void)
+{
+  /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
   HAL_Init();
+
+  /* Configure the system clock */
+  SystemClock_Config();
+
+  /* Initialize all configured peripherals */
+  //  MW_USARTInit(USART1ID);
+
+
+
+  while (1)
   {
-    if( HAL_UART_Init( &U2handle ) != HAL_OK ){
-      while( 1 ){
-        HAL_GPIO_WritePin( GPIOD, GPIO_PIN_6, GPIO_PIN_SET );
-        HAL_GPIO_WritePin( GPIOD, GPIO_PIN_13, GPIO_PIN_SET );
+	  /*Configure GPIO pin : PC13 */
+	  MW_SetGPIOPin(GPIO_PIN_13);
+	  MW_SetGPIOMode(GPIO_MODE_INPUT);
+	  MW_SetGPIOPull(GPIO_NOPULL);
+	  MW_GPIOInit(GPIOCID);
 
-        for( uint32_t i = 0; i < 200000; i++ ){
-          ;
-        }
-        HAL_GPIO_WritePin( GPIOD, GPIO_PIN_6, GPIO_PIN_RESET );
-        HAL_GPIO_WritePin( GPIOD, GPIO_PIN_13, GPIO_PIN_RESET );
+	  /*Configure GPIO pin : PA5 */
+	  MW_SetGPIOPin(GPIO_PIN_5);
+	  MW_SetGPIOMode(GPIO_MODE_OUTPUT_PP);
+	  MW_SetGPIOSpeed(GPIO_SPEED_FREQ_LOW);
+	  MW_GPIOInit(GPIOAID);
 
-        for( uint32_t i = 0; i < 500000; i++ ){
-          ;
-        }
-      }
-    } else {
-      xdev_out( __io_putchar );
+	  /*Configure GPIO pin : PC4 */
+	  MW_SetGPIOPin(GPIO_PIN_4);
+	  MW_SetGPIOMode(GPIO_MODE_IT_RISING);
+	  MW_SetGPIOPull(GPIO_NOPULL);
+	  MW_GPIOInit(GPIOCID);
 
-      while( 1 ){
-        xprintf( "HelloWorld\n" );
-        xprintf( "HelloWorld%d\n", 114514 );
-        HAL_GPIO_WritePin( GPIOD, GPIO_PIN_6, GPIO_PIN_SET );
-        HAL_GPIO_WritePin( GPIOD, GPIO_PIN_13, GPIO_PIN_SET );
-
-        for( int i = 0; i < 500000; i++ ){
-          ;
-        }
-
-        HAL_GPIO_WritePin( GPIOD, GPIO_PIN_6, GPIO_PIN_RESET );
-        HAL_GPIO_WritePin( GPIOD, GPIO_PIN_13, GPIO_PIN_RESET );
-
-        for( int i = 0; i < 500000; i++ ){
-          ;
-        }
-      }
-    }
+	  /*Configure GPIO pin Output Level */
+	  MW_GPIOWrite(GPIOAID,GPIO_PIN_5,0);
   }
 }
 
-void Delay( volatile unsigned long delay ) {
-  for(; delay; --delay ){
-    ;
-  }
+void MW_TIM1Hadler(void)
+{
+
+}
+void MW_TIM2Hadler(void)
+{
+
 }
 
-void GPIO_Config() {
-  RCC->APB2ENR |= ( 0x01 << 4 ) | ( 0x01 << 5 );
+/** System Clock Configuration
+*/
+void SystemClock_Config(void)
+{
 
-  GPIOD->CRL = 0x42444444;
-  GPIOD->CRH = 0x44244444;
+  RCC_OscInitTypeDef RCC_OscInitStruct;
+  RCC_ClkInitTypeDef RCC_ClkInitStruct;
+  RCC_PeriphCLKInitTypeDef PeriphClkInit;
 
-  __HAL_RCC_GPIOA_CLK_ENABLE();
-
-  __HAL_RCC_USART2_CLK_ENABLE();
-
-  /* GPIO_InitStruct.Pin = GPIO_PIN_2; */
-  /* GPIO_InitStruct.Mode = GPIO_MODE_AF_PP; */
-  /* GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH; */
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_LSI|RCC_OSCILLATORTYPE_HSE;
+  RCC_OscInitStruct.HSEState = RCC_HSE_ON;
+  RCC_OscInitStruct.HSEPredivValue = RCC_HSE_PREDIV_DIV1;
+  RCC_OscInitStruct.LSIState = RCC_LSI_ON;
+  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
+  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
+  RCC_OscInitStruct.PLL.PLLMUL = RCC_PLL_MUL9;
+  if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
-    GPIO_InitTypeDef gpio = {
-      GPIO_PIN_2,
-      GPIO_MODE_AF_PP,
-      GPIO_NOPULL,
-      GPIO_SPEED_FREQ_HIGH,
-    };
-    HAL_GPIO_Init( GPIOA, &gpio );
+//    Error_Handler();
   }
 
+  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
+                              |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
+  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
+  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
+  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV2;
+  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_2) != HAL_OK)
   {
-    GPIO_InitTypeDef gpio = {
-      GPIO_PIN_3,
-      GPIO_MODE_INPUT,
-      GPIO_NOPULL,
-      GPIO_SPEED_FREQ_HIGH
-    };
-    HAL_GPIO_Init( GPIOA, &gpio );
+//    Error_Handler();
   }
-  /*    GPIO_InitTypeDef	GPIO_InitStructure;
-    *
-    *  RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);
-    *
-    *  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0 | GPIO_Pin_1;
-    *  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_10MHz;
-    *  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
-    *  GPIO_Init(GPIOB, &GPIO_InitStructure);
-    */
+
+  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_ADC;
+  PeriphClkInit.AdcClockSelection = RCC_ADCPCLK2_DIV6;
+  if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
+  {
+//    Error_Handler();
+  }
+
+  HAL_SYSTICK_Config(HAL_RCC_GetHCLKFreq()/1000);
+
+  HAL_SYSTICK_CLKSourceConfig(SYSTICK_CLKSOURCE_HCLK);
+
+  /* SysTick_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(SysTick_IRQn, 0, 0);
 }
 
+/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
