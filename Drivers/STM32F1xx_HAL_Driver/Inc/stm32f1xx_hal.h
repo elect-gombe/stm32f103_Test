@@ -47,8 +47,8 @@
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f1xx_hal_conf.h"
 #include "MW_GPIO.h"
+#include "MW_USART.h"
    /*
-#include "/home/evaota/workspace/STM32F1Nucleo/Drivers/MidleWare/Inc/MW_USART.h"
 #include "/home/evaota/workspace/STM32F1Nucleo/Drivers/MidleWare/Inc/MW_I2C.h"
 #include "/home/evaota/workspace/STM32F1Nucleo/Drivers/MidleWare/Inc/MW_SPI.h"
 #include "/home/evaota/workspace/STM32F1Nucleo/Drivers/MidleWare/Inc/MW_ADC.h"

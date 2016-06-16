@@ -23,7 +23,7 @@ GCC_BIN =
 PROJECT = Test
 
 #use debugger?
-DEBUG = 0
+DEBUG = 1
 
 DRIVERSDIR = ./Drivers
 HALDIR = $(DRIVERSDIR)/STM32F1xx_HAL_Driver
@@ -36,7 +36,7 @@ OBJDIR=./obj
 USR_SRCDIR = ./Src
 HAL_SRCDIR = $(HALDIR)/Src
 MIDDLE_SRCDIRS = $(wildcard $(MIDDLE_DRIVERDIR)/*/Src)
-STARTUP_SRC = $(DRIVERSDIR)/startup_stm32f103xe.s
+STARTUP_SRC = $(DRIVERSDIR)/startup_stm32f103xb.s
 STARTUP_OBJ = startup.o
 
 BINDIR = ./bin
@@ -166,7 +166,7 @@ include:
 	echo $(INCLUDEDIRS)
 
 
-OPENOCDPATH=~/Workspace/program/0.10.0-201601101000-dev/bin
+OPENOCDPATH=/home/evaota/app/openocd0.10.0-201601101000-dev/bin
 OPENOCDCONFIGDIR=./Drivers/openocd_configulation
 
 openocd: $(BINDIR)/$(PROJECT).elf
